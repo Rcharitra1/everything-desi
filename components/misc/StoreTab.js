@@ -23,7 +23,7 @@ const StoreTab = props =>{
 
 const styles = StyleSheet.create({
     tabView :{
-        height: 300,
+        height: 350,
         width:350,
         backgroundColor:'white',
         borderRadius:6,

@@ -5,6 +5,7 @@ class Product {
         this.title = title,
         this.category = category,
         this.imageUrl = imageUrl,
+        this.description=description
         this.quantity = quantity,
         this.price = price,
         this.storeId = storeId,

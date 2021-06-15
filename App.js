@@ -7,11 +7,13 @@ import storeReducer from './store/reducers/stores';
 import productReducer from './store/reducers/products';
 import AppNavigator from './navigation/AppNavigator';
 import AppLoading from 'expo-app-loading';
+import cartReducer from './store/reducers/cart'
 
 import * as Font from 'expo-font'
 const rootReducer = combineReducers({
   stores:storeReducer,
-  products:productReducer
+  products:productReducer,
+  cart:cartReducer
 })
 
 const store = createStore(rootReducer, applyMiddleware(Thunk));

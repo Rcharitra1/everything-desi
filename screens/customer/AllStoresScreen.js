@@ -40,16 +40,23 @@ const AllStoreScreen = props =>{
         return <ActivityIndicator size='large' color={Colors.primary} />
     }
     return(
-        <ScrollView style={{backgroundColor:'white'}}>
+        <ScrollView style={{backgroundColor:'white'}} 
+        showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
         <View style={styles.tabletView}>
         <Text style={styles.categoryTitle}>Featured Stores</Text>
         <FlatList data={featuredStores} horizontal={true} renderItem={renderTabs} 
-        keyExtractor={(item)=> item.id.toString()}/>
+        keyExtractor={(item)=> item.id.toString()}
+        showsVerticalScrollIndicator ={false}
+        showsHorizontalScrollIndicator={false}
+        />
         </View>
         <View style={styles.tabletView}>
         <Text style={styles.categoryTitle}>All Stores</Text>
         <FlatList data={allStores} horizontal={true} renderItem={renderTabs} 
-        keyExtractor={(item)=> item.id.toString()}/>
+        keyExtractor={(item)=> item.id.toString()}
+        showsVerticalScrollIndicator ={false}
+        showsHorizontalScrollIndicator={false}
+        />
         </View>
         {storeCategories && storeCategories.map((type)=>{
             const categoryStores = allStores.filter((item)=> item.type===type)
@@ -57,7 +64,8 @@ const AllStoreScreen = props =>{
                 <View key={type} style={styles.tabletView}>
             <Text style={styles.categoryTitle}>{type.toString().slice(0, 1).toUpperCase()+type.toString().slice(1, type.length)}</Text>
             <FlatList data={categoryStores} horizontal={true} renderItem={renderTabs} 
-            keyExtractor={(item)=> item.id.toString()}/>
+            keyExtractor={(item)=> item.id.toString()}  showsVerticalScrollIndicator ={false}
+            showsHorizontalScrollIndicator={false}/>
             </View>
             );
         })}
@@ -87,7 +95,11 @@ export const screenOptions = (navData)=>
         headerTitle:'Stores',
         headerRight:()=><HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item iconName={Platform.OS==='android' ? 'md-cart' : 'ios-cart'}/>
-        </HeaderButtons>
+        </HeaderButtons>,
+        headerLeft:()=><HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item iconName={Platform.OS==='android'? 'md-menu':'ios-menu'} onPress={()=>{
+            navData.navigation.toggleDrawer()
+        }}/></HeaderButtons>
     };
 }
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 
-import { StoreNavigator } from './ShopNavigator';
+import { StoreNavigator, MainNavigator } from './ShopNavigator';
 
 const AppNavigator = props =>{
     return(
         <NavigationContainer>
-        <StoreNavigator/>
+        <MainNavigator/>
         </NavigationContainer>
     );
 }

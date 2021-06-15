@@ -3,10 +3,12 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import AllStoresScreen, {screenOptions as allStoreScreenOptions} from '../screens/customer/AllStoresScreen';
 import StoreProductsScreen, {screenOptions as storeProductsScreenOptions} from '../screens/customer/StoreProductsScreen';
-import DetailScreen from '../screens/customer/DetailScreen';
+import DetailScreen, {screenOptions as detailScreenOptions} from '../screens/customer/DetailScreen';
 import { Platform } from 'react-native'
 import Colors from '../constants/Colors';
 import FontSizes from '../constants/FontSizes';
+import OrderScreen, {screenOptions as orderScreenOptions} from '../screens/customer/OrderScreen'
+
 
 
 const defaultNavOptions = {
@@ -28,8 +30,27 @@ export const StoreNavigator = ()=>{
         <StoreStackNavigator.Screen name='AllStores' component={AllStoresScreen} options={allStoreScreenOptions}/>
         <StoreStackNavigator.Screen name='Store' component={StoreProductsScreen} options={storeProductsScreenOptions}/>
         <StoreStackNavigator.Screen name='Details'
-        component={DetailScreen}/>
+        component={DetailScreen} options={detailScreenOptions}/>
         </StoreStackNavigator.Navigator>
         
     );
+}
+
+const OrderStackNavigator = createStackNavigator();
+
+const OrderNavigator = ()=>{
+    return(
+        <OrderStackNavigator.Navigator screenOptions={defaultNavOptions}>
+        <OrderStackNavigator.Screen name='Orders' component={OrderScreen} options={orderScreenOptions}/>
+        </OrderStackNavigator.Navigator>
+    );
+}
+
+const MainDrawerNavigator = createDrawerNavigator();
+export const MainNavigator = ()=>{
+    return(
+    <MainDrawerNavigator.Navigator drawerContentOptions={{activeTintColor:Colors.primary}}>
+    <MainDrawerNavigator.Screen name='Store' component={StoreNavigator}/>
+    <MainDrawerNavigator.Screen name='Orders' component={OrderNavigator}/>
+    </MainDrawerNavigator.Navigator>);
 }

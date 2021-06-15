@@ -5,7 +5,7 @@ import Colors from '../../constants/Colors';
 import FontSizes from '../../constants/FontSizes';
 const CustomButton = props =>{
 
-    const TouchBtn = TouchableOpacity;
+    let TouchBtn = TouchableOpacity;
 
     if(Platform.OS==='android' && Platform.Version>=21){
         TouchBtn = TouchableNativeFeedback

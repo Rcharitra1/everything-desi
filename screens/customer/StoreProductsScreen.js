@@ -32,27 +32,55 @@ const StoreProductsScreen = props =>{
     }
 
 
-    const {products, discountedProducts, categories}=useSelector(state=> state.products);
+    const {products, discountedProducts, productCategories}=useSelector(state=> state.products);
 
     if(products.length===0 && discountedProducts.length===0)
     {
         return (<View style={styles.screen}><Text style={styles.noProducts}>No Products Available</Text></View>)
     }
 
+    const onSelectClick = (id, title)=>{
+        props.navigation.navigate('Details', {
+            productId:id,
+            productTitle:title
+        })
+    }
+
+    const onAddToCart = (id)=>{
+        console.log(id);
+    }
+
     const renderProduct = itemData =>{
-        return <ProductTab imageUrl={itemData.item.imageUrl} title={itemData.item.title} price={itemData.item.price.toFixed(2)}/>
+        return <ProductTab imageUrl={itemData.item.imageUrl} title={itemData.item.title} price={itemData.item.price.toFixed(2)} onPress={onSelectClick.bind(this, itemData.item.id,  itemData.item.title)}
+        toCart={onAddToCart.bind(this, itemData.item.id)} discounted={itemData.item.discount>0 ? true : false} discount={itemData.item.discount}/>
     }
 
     return(
-        <ScrollView style={{backgroundColor:'white'}}>
+        <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
         <View style={styles.tabView} >
         <Text style={styles.categoryTitle}>Discounted Products</Text>
-        <FlatList data={discountedProducts} horizontal={true} keyExtractor={item=> item.id.toString()} renderItem={renderProduct}/>
+        <FlatList data={discountedProducts} horizontal={true} keyExtractor={item=> item.id.toString()} renderItem={renderProduct}  showsVerticalScrollIndicator ={false}
+        showsHorizontalScrollIndicator={false}/>
         </View>
         <View style={styles.tabView}>
         <Text style={styles.categoryTitle}>All Products</Text>
-        <FlatList data={products} horizontal={true} keyExtractor={item=> item.id.toString()} renderItem={renderProduct}/>
+        <FlatList data={products} horizontal={true} keyExtractor={item=> item.id.toString()}
+        showsVerticalScrollIndicator ={false}
+        showsHorizontalScrollIndicator={false} renderItem={renderProduct}/>
         </View>
+        {productCategories && productCategories.map(category => {
+            const categoryProducts = products.filter(item=> item.category===category);
+            if(categoryProducts.length>0)
+            { return (
+                <View style={styles.tabView} key={category}>
+                <Text style={styles.categoryTitle}>{category.slice(0, 1).toUpperCase()+category.slice(1, category.length)}</Text>
+                <FlatList data = {categoryProducts} horizontal={true} renderItem={renderProduct} keyExtractor={item=> item.id.toString()}  showsVerticalScrollIndicator ={false}
+                showsHorizontalScrollIndicator={false}/>
+                </View>
+            );
+            }
+           
+        })}
         </ScrollView>
     )
 }
