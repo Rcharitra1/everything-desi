@@ -1,0 +1,19 @@
+import React from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native'
+
+const EditCreateScreen = props =>{
+    return(
+        <View style={styles.screen}>
+        <Text>Add/Edit Screen</Text>
+        </View>
+    )
+}
+const styles = StyleSheet.create({
+    screen:{
+        flex: 1,
+        alignItems:'center',
+        justifyContent:'center'
+    }
+})
+
+export default EditCreateScreen;
