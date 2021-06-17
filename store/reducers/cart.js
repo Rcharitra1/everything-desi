@@ -1,38 +1,63 @@
 import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions/cart";
 import Order from '../../models/order';
 import Item from '../../models/Item'
-import { indexOf } from "lodash";
+
 
 const initialState = {
     cartItems:[]
 }
 
+
+const calculateTotal = (items)=>{
+                
+
+                let totalsObj = {
+                    tax:0,
+                    total:0,
+                    discount:0
+                }
+
+                for(let k=0; k<items.length; k++)
+                    {
+                        totalsObj.total += items[k].quantity * items[k].price;
+                        totalsObj.tax = (totalsObj.total * 0.05);
+                        totalsObj.discount += (items[k].price * items[k].quantity * items[k].discount)   
+                    }
+                return totalsObj
+
+}
 export default (state=initialState, action)=>{
     switch(action.type)
     {
         case ADD_TO_CART:
             const storeId = action.item.storeId;
-
-            if(state.cartItems.index(item=> item.storeId===storeId)>=0)
+            if(state.cartItems.findIndex(item=> item.storeId===storeId)>=0)
             {
                 const copyCartItems = [...state.cartItems]
                 const existingOrder = state.cartItems.find(item=> item.storeId===storeId);
-                const objIndex = state.cartItems.index(item=> item.storeId===storeId);
+                const objIndex = state.cartItems.findIndex(item=> item.storeId===storeId);
 
-                if(existingOrder.items.index(item=> item.id===action.item.id)>=0)
+                if(existingOrder.items.findIndex(item=> item.id===action.item.id)>=0)
                 {
-                    const index = existingOrder.items.index(item=> item.id===action.item.id);
+                    const index = existingOrder.items.findIndex(item=> item.id===action.item.id);
                     existingOrder.items[index].quantity += 1;
-                    existingOrder.total += existingOrder.items[index].price;
-
-                    copyCartItems.filter(item=> indexOf(item)===index);
-                    copyCartItems.push(existingOrder);
+                    
                 }else
                 {
-                    existingOrder.items.push(new Item(action.id, action.title, action.price, 1))
-                    copyCartItems.filter(item=> indexOf(item)===index);
-                    copyCartItems.push(existingOrder);
+                    existingOrder.items.push(new Item(action.item.id, action.item.title, action.item.price, 1, action.item.discount))
+
                 }
+
+                const {tax, total, discount}=
+                calculateTotal(existingOrder.items)
+
+                    existingOrder.total = total;
+                    existingOrder.totalDiscount = discount;
+                    existingOrder.tax = tax;
+                    existingOrder.subTotal = (total - discount + tax)
+                copyCartItems.splice(objIndex, 1)
+
+                    copyCartItems.push(existingOrder);
 
                 return{
                     ...state,
@@ -43,20 +68,61 @@ export default (state=initialState, action)=>{
             {
                 return{
                     ...state,
-                    cartItems: cartItems.concat(new Order(
+                    cartItems: state.cartItems.concat(new Order(
                         new Date().toISOString(),
                         action.item.storeId,
                         new Date().toString(),
-                        [new Item(action.id, action.title, action.price, 1)], action.price
+                        [new Item(action.item.id, action.item.title, action.item.price, 1, action.item.discount)], action.item.price,
+                        (action.item.price - (action.item.price * action.item.discount)+(0.05 * action.item.price)), (action.item.price * 0.05),
+                        (action.item.discount * action.item.price),
+                        'customer1'
                     ))
                 }
             }
            
         case REMOVE_FROM_CART:
+            const {id, orderId} = action.removeItem;
+            console.log(action.removeItem)
+
+            let copyCartItems = [...state.cartItems];
+            let orderItem = copyCartItems.find(item=> item.id===orderId);
+            let cartItem = orderItem.items.find(item=> item.id===id);
+            const objIndex = copyCartItems.indexOf(orderItem);
+            const index = orderItem.items.indexOf(cartItem)
+            if(orderItem.items.length===1 && cartItem.quantity==1)
+            {
+                copyCartItems.splice(objIndex, 1);
+              
+            }else
+            {
+                orderItem.items.splice(index, 1);
+                if(cartItem.quantity>1)
+                {
+                    cartItem.quantity -=1;
+                    orderItem.items.push(cartItem);
+                }
+                
+                
+                const {tax, total, discount}=
+                calculateTotal(orderItem.items)
+
+                orderItem.tax = tax;
+                orderItem.discount = discount,
+                orderItem.total = total,
+                orderItem.subTotal = (total - discount + tax);
+                copyCartItems.splice(objIndex, 1);
+                copyCartItems.push(orderItem);
+
+            }
+
+            console.log(copyCartItems)
+
             return{
                 ...state,
-                cartItems
+                cartItems: [...copyCartItems]
             }
     }
     return state;
 }
+
+

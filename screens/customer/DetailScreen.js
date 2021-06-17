@@ -1,16 +1,37 @@
-import React from 'react';
-import { View, Text, ImageBackground, StyleSheet, ScrollView} from 'react-native'
-import { useSelector } from 'react-redux'; 
+import React, {useEffect, useState, useCallback} from 'react';
+import { View, Text, ImageBackground, StyleSheet, ScrollView, Alert} from 'react-native'
+import { useSelector, useDispatch } from 'react-redux'; 
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/ui/HeaderButton';
 import FontSizes from '../../constants/FontSizes';
 import Colors from '../../constants/Colors';
 import CustomButton from '../../components/ui/CustomButton';
 import DisabledButton from '../../components/ui/DisabledButton';
+import * as cartActions from '../../store/actions/cart';
+import * as productActions from '../../store/actions/products'
 const DetailScreen = props =>{
+
+
     const {productId} = props.route.params;
-    const product = useSelector(state=> state.products.products.find(item=> item.id===productId))
-    const store = useSelector(state=> state.stores.stores.find(item=> item.id===product.storeId))
+    let product = useSelector(state=> state.products.products.find(item=> item.id===productId))
+
+    let store = useSelector(state=> state.stores.stores.find(item=> item.id===product.storeId))
+    const dispatch = useDispatch();
+
+
+    if(!product)
+    {
+        return<View style={styles.screen}><Text style={styles.noItem}>No product</Text></View>
+    }
+
+
+
+    const addToCart = ()=>{
+        dispatch(cartActions.addToCart(productId, product.title, product.price, product.discount, product.storeId)).then(()=>{
+            Alert.alert('Cart', `${product.title} is been added to your cart`, [{text: 'Okay'}])
+        }).catch(err=> console.log(err))
+    }
+
     return(
         <ScrollView style={{backgroundColor:'white'}}>
         <ImageBackground source={{uri:product.imageUrl}} style={styles.image}>
@@ -21,7 +42,7 @@ const DetailScreen = props =>{
         }
         <View style={styles.centerContainer}>
         {
-            product.quantity> 0 ? <CustomButton style={{marginVertical:10}}>Add To Cart</CustomButton> : <DisabledButton>Out Of Stock</DisabledButton>
+            product.quantity> 0 ? <CustomButton style={{marginVertical:10}} onPress={addToCart}>Add To Cart</CustomButton> : <DisabledButton>Out Of Stock</DisabledButton>
         }
         <Text style={styles.description}>{product.description}</Text>
         <View style={styles.seller}><Text style={styles.sellerHead}>Sold By:</Text><Text style={styles.sellerTitle}>{store.title}</Text></View>
@@ -86,6 +107,15 @@ const styles = StyleSheet.create({
     },
     seller:{
         marginVertical:10
+    },
+    screen:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    noItem:{
+        fontFamily:'roboto',
+        fontSize:FontSizes.extraLarge
     }
     
 })
@@ -94,7 +124,9 @@ export const screenOptions = navData =>{
     const headerTitle = navData.route.params.productTitle;
     return{
         headerTitle:headerTitle,
-        headerRight:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}><Item iconName={Platform.OS==='android'? 'md-cart':'ios-cart'}/></HeaderButtons>)
+        headerRight:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}><Item iconName={Platform.OS==='android'? 'md-cart':'ios-cart'} onPress={()=>{
+            navData.navigation.navigate('Cart')
+        }}/></HeaderButtons>)
 
     }
 }

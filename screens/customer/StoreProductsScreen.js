@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, FlatList, Text, StyleSheet, ActivityIndicator, Platform, ScrollView } from 'react-native'
+import { View, FlatList, Text, StyleSheet, ActivityIndicator, Platform, ScrollView, Alert } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import * as productActions from '../../store/actions/products';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -7,6 +7,8 @@ import HeaderButton from '../../components/ui/HeaderButton';
 import FontSizes from '../../constants/FontSizes'
 import Colors from '../../constants/Colors'
 import ProductTab from '../../components/misc/ProductTab';
+import * as cartActions from '../../store/actions/cart';
+
 
 const StoreProductsScreen = props =>{
 
@@ -46,13 +48,15 @@ const StoreProductsScreen = props =>{
         })
     }
 
-    const onAddToCart = (id)=>{
-        console.log(id);
+    const onAddToCart = (id,title, price, discount, storeID )=>{
+        dispatch(cartActions.addToCart(id, title, price, discount, storeID)).then(()=>{
+            Alert.alert('Cart', `${title} added to your cart`, [{text:'Okay'}])
+        }).catch(err=> console.log(err))
     }
 
     const renderProduct = itemData =>{
         return <ProductTab imageUrl={itemData.item.imageUrl} title={itemData.item.title} price={itemData.item.price.toFixed(2)} onPress={onSelectClick.bind(this, itemData.item.id,  itemData.item.title)}
-        toCart={onAddToCart.bind(this, itemData.item.id)} discounted={itemData.item.discount>0 ? true : false} discount={itemData.item.discount}/>
+        toCart={onAddToCart.bind(this, itemData.item.id, itemData.item.title, itemData.item.price, itemData.item.discount, itemData.item.storeId)} discounted={itemData.item.discount>0 ? true : false} discount={itemData.item.discount} disabled={itemData.item.quantity<=0 ? true : false}/>
     }
 
     return(
@@ -110,7 +114,9 @@ export const screenOptions = navData =>{
     const headerTitle = navData.route.params.storeTitle;
     return{
         headerTitle:headerTitle,
-        headerRight:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}><Item iconName={Platform.OS==='android'? 'md-cart':'ios-cart'}/></HeaderButtons>)
+        headerRight:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}><Item iconName={Platform.OS==='android'? 'md-cart':'ios-cart'} onPress={()=>{
+            navData.navigation.navigate('Cart')
+        }}/></HeaderButtons>)
 
     }
 }

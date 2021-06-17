@@ -3,6 +3,7 @@ import { TouchableNativeFeedback, StyleSheet, View, Image, Text, TouchableOpacit
 import CustomButton from '../ui/CustomButton';
 import Colors from '../../constants/Colors';
 import FontSizes from '../../constants/FontSizes';
+import DisabledButton from '../../components/ui/DisabledButton';
 
 const ProductTab = props =>{
     let TouchUI = TouchableOpacity;
@@ -30,10 +31,18 @@ const ProductTab = props =>{
            props.discounted ? discountedText : <View><Text style={{...styles.discountedPrice, color:'white', textDecorationColor:'white'}}>{props.price}</Text><Text style={styles.price}>${props.price}</Text></View>
            
        }
-       
+     
         <View style={styles.buttonContainer}>
         <CustomButton style={{...styles.buttons}} onPress={props.onPress}>Details</CustomButton>
-        <CustomButton style={{backgroundColor:Colors.success, ...styles.buttons}} onPress={props.toCart}>Add To Cart</CustomButton>
+        {
+            props.disabled ? 
+            <DisabledButton style={{...styles.button}}>Out Of Stock</DisabledButton>
+            :
+            
+            <CustomButton style={{backgroundColor:Colors.success, ...styles.buttons}} onPress={props.toCart}>Add To Cart</CustomButton>
+        }
+        
+      
         </View>
        
         </View>
@@ -75,7 +84,7 @@ const styles = StyleSheet.create({
     buttonContainer:{
         flexDirection:'row',
         justifyContent:'space-around',
-        alignItems:'flex-end'
+        alignItems:'center'
     },
     price:{
         fontFamily:'roboto',

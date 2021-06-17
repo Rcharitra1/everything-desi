@@ -1,4 +1,6 @@
-import { GET_DISCOUNTED_PRODUCTS, GET_FEATURED_PRODUCTS, GET_PRODUCT_CATEGORIES, GET_STORE_PRODUCTS } from "../actions/products";
+import { GET_DISCOUNTED_PRODUCTS, GET_PRODUCT_CATEGORIES, GET_STORE_PRODUCTS } from "../actions/products";
+
+import {ADD_TO_CART, REMOVE_FROM_CART} from '../actions/cart';
 
 const initialState=
 {
@@ -25,6 +27,40 @@ export default (state=initialState, action)=>{
                 ...state,
                 productCategories:action.categories
             }
+        case ADD_TO_CART:{
+            const productId = action.item.id;
+            const copyProducts = [...state.products];
+
+
+            const productIndex = copyProducts.findIndex(item=> item.id ===productId);
+
+            copyProducts[productIndex].quantity -=1;
+            
+            // console.log(copyProducts)
+            return{
+                ...state,
+                products: [...copyProducts]
+            }
+
+          
+
+        }
+
+        case REMOVE_FROM_CART:{
+            const productId = action.removeItem.id;
+            const copyProducts = [...state.products];
+
+
+            // const productIndex = copyProducts.findIndex(item=> item.id ===productId);
+
+            // copyProducts[productIndex].quantity +=1;
+            
+            // // console.log(copyProducts)
+            return{
+                ...state,
+                products: [...copyProducts]
+            }
+        }
     }
     return state;
 

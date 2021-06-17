@@ -94,7 +94,9 @@ export const screenOptions = (navData)=>
     return {
         headerTitle:'Stores',
         headerRight:()=><HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item iconName={Platform.OS==='android' ? 'md-cart' : 'ios-cart'}/>
+        <Item iconName={Platform.OS==='android' ? 'md-cart' : 'ios-cart'} onPress={()=>{
+            navData.navigation.navigate('Cart')
+        }}/>
         </HeaderButtons>,
         headerLeft:()=><HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item iconName={Platform.OS==='android'? 'md-menu':'ios-menu'} onPress={()=>{

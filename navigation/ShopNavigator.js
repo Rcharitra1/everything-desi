@@ -8,6 +8,7 @@ import { Platform } from 'react-native'
 import Colors from '../constants/Colors';
 import FontSizes from '../constants/FontSizes';
 import OrderScreen, {screenOptions as orderScreenOptions} from '../screens/customer/OrderScreen'
+import CartScreen from '../screens/customer/CartScreen';
 
 
 
@@ -31,6 +32,7 @@ export const StoreNavigator = ()=>{
         <StoreStackNavigator.Screen name='Store' component={StoreProductsScreen} options={storeProductsScreenOptions}/>
         <StoreStackNavigator.Screen name='Details'
         component={DetailScreen} options={detailScreenOptions}/>
+        <StoreStackNavigator.Screen name='Cart' component={CartScreen}/>
         </StoreStackNavigator.Navigator>
         
     );

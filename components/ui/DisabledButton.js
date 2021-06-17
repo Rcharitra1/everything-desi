@@ -4,7 +4,7 @@ import FontSizes from '../../constants/FontSizes';
 
 const DisabledButton = props =>{
     return(
-        <View style={styles.disabledView}><Text style={styles.disabledText}>{props.children}</Text></View>
+        <View style={{...styles.disabledView, ...props.style}}><Text style={styles.disabledText}>{props.children}</Text></View>
     );
 }
 
