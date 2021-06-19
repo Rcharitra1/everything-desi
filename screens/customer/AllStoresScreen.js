@@ -30,7 +30,7 @@ const AllStoreScreen = props =>{
     storeCategories.sort();
 
     const renderTabs= (itemData)=>{
-        return <StoreTab title={itemData.item.title} imageUrl={itemData.item.imageUrl} onPress={()=>{
+        return <StoreTab buttonTitle={'Shop'} title={itemData.item.title} imageUrl={itemData.item.imageUrl} onPress={()=>{
             props.navigation.navigate('Store', {storeId: itemData.item.id, storeTitle: itemData.item.title})
         }}/>
     }

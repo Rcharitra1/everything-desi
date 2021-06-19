@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableNativeFeedback, StyleSheet, View, Image, Text, TouchableOpacity, Platform } from 'react-native'
+import { TouchableNativeFeedback, StyleSheet, View, Image, Text, TouchableOpacity, Platform, Dimensions } from 'react-native'
 import CustomButton from '../ui/CustomButton';
 import Colors from '../../constants/Colors';
 import FontSizes from '../../constants/FontSizes';
@@ -15,7 +15,14 @@ const StoreTab = props =>{
         <View style={styles.tabView}>
         <Image source={{uri:props.imageUrl}} style={styles.tabImage}/>
         <Text style={styles.tabText}>{props.title}</Text>
-        <CustomButton onPress={props.onPress}>Shop</CustomButton>
+        <View style={styles.buttonContainer}>
+        <CustomButton style={styles.button} onPress={props.onPress}>{props.buttonTitle}</CustomButton>
+        {
+            props.secondButtonTitle &&  <CustomButton onPress={props.onPress} style={{...styles.button, backgroundColor:Colors.secondary}} onPress={props.secondOnPress}>{props.secondButtonTitle}</CustomButton>
+        }
+        </View>
+       
+      
         </View>
         </TouchUI>
     )
@@ -47,6 +54,13 @@ const styles = StyleSheet.create({
         fontFamily:'roboto-bold',
         color:Colors.dark
     },
+    buttonContainer:{
+        alignItems:'center',
+        flexDirection:'row'
+    },
+    button:{
+        width:150
+    }
     
 })
 

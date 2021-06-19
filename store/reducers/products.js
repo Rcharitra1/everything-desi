@@ -1,4 +1,4 @@
-import { GET_DISCOUNTED_PRODUCTS, GET_PRODUCT_CATEGORIES, GET_STORE_PRODUCTS } from "../actions/products";
+import { GET_DISCOUNTED_PRODUCTS, GET_PRODUCT_CATEGORIES, GET_STORE_PRODUCTS, SET_ALL_PRODUCTS } from "../actions/products";
 
 import {ADD_TO_CART, REMOVE_FROM_CART} from '../actions/cart';
 
@@ -6,16 +6,22 @@ const initialState=
 {
     products:[],
     discountedProducts:[],
+    storeProducts : [],
     productCategories:[]
 }
 
 export default (state=initialState, action)=>{
     switch(action.type)
     {
+        case SET_ALL_PRODUCTS:
+            return{
+                ...state,
+                products:action.products
+            }
         case GET_STORE_PRODUCTS:
             return{
                 ...state,
-                products: action.products
+                storeProducts: action.storeProducts
             }
         case GET_DISCOUNTED_PRODUCTS:
             return{
@@ -30,6 +36,7 @@ export default (state=initialState, action)=>{
         case ADD_TO_CART:{
             const productId = action.item.id;
             const copyProducts = [...state.products];
+
 
 
             const productIndex = copyProducts.findIndex(item=> item.id ===productId);
@@ -51,11 +58,13 @@ export default (state=initialState, action)=>{
             const copyProducts = [...state.products];
 
 
-            // const productIndex = copyProducts.findIndex(item=> item.id ===productId);
-
-            // copyProducts[productIndex].quantity +=1;
             
-            // // console.log(copyProducts)
+            const productIndex = copyProducts.findIndex(item=> item.id ===productId);
+     
+
+            copyProducts[productIndex].quantity +=1;
+            
+            // console.log(copyProducts)
             return{
                 ...state,
                 products: [...copyProducts]

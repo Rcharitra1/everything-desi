@@ -1,4 +1,5 @@
 import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions/cart";
+import {PLACE_ALL_ORDER, PLACE_ORDER} from '../actions/order'; 
 import Order from '../../models/order';
 import Item from '../../models/Item'
 
@@ -7,15 +8,14 @@ const initialState = {
     cartItems:[]
 }
 
-
 const calculateTotal = (items)=>{
                 
 
-                let totalsObj = {
-                    tax:0,
-                    total:0,
-                    discount:0
-                }
+                    let totalsObj = {
+                        tax:0,
+                        total:0,
+                        discount:0
+                    }
 
                 for(let k=0; k<items.length; k++)
                     {
@@ -58,6 +58,7 @@ export default (state=initialState, action)=>{
                 copyCartItems.splice(objIndex, 1)
 
                     copyCartItems.push(existingOrder);
+                    copyCartItems.sort((a, b)=> a.id > b.id ? 1 : -1);
 
                 return{
                     ...state,
@@ -76,7 +77,7 @@ export default (state=initialState, action)=>{
                         (action.item.price - (action.item.price * action.item.discount)+(0.05 * action.item.price)), (action.item.price * 0.05),
                         (action.item.discount * action.item.price),
                         'customer1'
-                    ))
+                    )).sort((a, b)=> a.id > b.id ? 1 : -1)
                 }
             }
            
@@ -114,6 +115,7 @@ export default (state=initialState, action)=>{
                 copyCartItems.push(orderItem);
 
             }
+            copyCartItems.sort((a, b)=> a.id > b.id ? 1 : -1);
 
             console.log(copyCartItems)
 
@@ -121,6 +123,21 @@ export default (state=initialState, action)=>{
                 ...state,
                 cartItems: [...copyCartItems]
             }
+
+        case PLACE_ORDER:
+           
+            const orderItemToRemove = action.orderItem;
+            const copyItems = [...state.cartItems];
+            const indexToDel = copyItems.indexOf(orderItemToRemove);
+            copyItems.splice(indexToDel, 1)
+            return{
+                ...state,
+                cartItems:[...copyItems]
+            }
+           
+        case PLACE_ALL_ORDER:
+            return initialState
+
     }
     return state;
 }

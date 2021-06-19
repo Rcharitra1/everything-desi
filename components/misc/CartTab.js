@@ -6,6 +6,7 @@ import FontSizes from '../../constants/FontSizes';
 import CustomButton from '../ui/CustomButton'
 import {Ionicons} from '@expo/vector-icons'
 import * as cartActions from '../../store/actions/cart';
+import * as orderActions from '../../store/actions/order';
 const CartTab = props =>{
 
     // console.log(props.storeId)
@@ -17,10 +18,14 @@ const CartTab = props =>{
         dispatch(cartActions.removeFromCart(id, orderId))
     }
 
+    const onPayButtonClick = (orderItem)=>{
+        dispatch(orderActions.placeOrder(orderItem))
+    }
+
     const renderDataItem = itemData =>{
         return(
             <View style={{...styles.header, alignItems:'center', padding:5}}>
-            <View style={{...styles.splitView, flexBasis:'10%'}}>
+            <View style={!props.disablePayment?{...styles.splitView, flexBasis:'12.5%'}:{...styles.splitView, flexBasis:'20%', justifyContent:'space-around'}}>
             <Text style={styles.itemText}>{itemData.item.quantity}</Text>
   
             </View>
@@ -31,11 +36,14 @@ const CartTab = props =>{
             <Text style={{...styles.itemText, justifyContent:'flex-end'}}>${(itemData.item.price * itemData.item.quantity).toFixed(2)}</Text>
             
             </View>
-            <View style={styles.splitView}>
-            <TouchableOpacity onPress={removeFromCart.bind(this, itemData.item.id, props.orderId)}>
-            <Ionicons name={Platform.OS==='android'? 'md-trash':'ios-trash'} size={23} color='red'/>
-            </TouchableOpacity>
-            </View>
+            {
+                !props.disablePayment && <View style={styles.splitView}>
+                <TouchableOpacity onPress={removeFromCart.bind(this, itemData.item.id, props.orderId)}>
+                <Ionicons name={Platform.OS==='android'? 'md-trash':'ios-trash'} size={23} color='red'/>
+                </TouchableOpacity>
+                </View>
+            }
+            
            
           
             </View>
@@ -82,10 +90,12 @@ const CartTab = props =>{
         }
         </View>
         <View style={{alignItems:'center'}}>
-        <CustomButton onPress={()=>setIsHidden(!isHidden)}>{isHidden? 'Details':'Hide' }</CustomButton>
-        </View>
-      
+        <View style={styles.buttonContainer}>
         
+        <CustomButton style={{width:125}} onPress={()=>setIsHidden(!isHidden)}>{isHidden? 'Details':'Hide' }</CustomButton>
+        {!props.disablePayment && <CustomButton style={{backgroundColor:Colors.success, width:125}} onPress={onPayButtonClick.bind(this, props.item)}>Pay ${props.subTotal.toFixed(2)}</CustomButton>}
+        </View> 
+        </View>  
         </View>
     );
 }
@@ -152,7 +162,12 @@ const styles = StyleSheet.create({
         flexBasis:'25%',
         alignItems:'center',
         justifyContent:'center'
-    }
+    },
+    buttonContainer:{
+        justifyContent:'space-between',
+        flexDirection:'row'
+    },
+    
 })
 
 export default CartTab;

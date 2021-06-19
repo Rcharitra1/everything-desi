@@ -19,6 +19,7 @@ const StoreProductsScreen = props =>{
 
     useEffect(()=>{
         setIsLoading(true)
+        dispatch(productActions.setAllProducts());
         dispatch(productActions.getStoreProducts(storeId))
         dispatch(productActions.getDiscountedProducts(storeId))
  
@@ -34,9 +35,9 @@ const StoreProductsScreen = props =>{
     }
 
 
-    const {products, discountedProducts, productCategories}=useSelector(state=> state.products);
+    const {storeProducts, discountedProducts, productCategories}=useSelector(state=> state.products);
 
-    if(products.length===0 && discountedProducts.length===0)
+    if(storeProducts.length===0 && discountedProducts.length===0)
     {
         return (<View style={styles.screen}><Text style={styles.noProducts}>No Products Available</Text></View>)
     }
@@ -68,12 +69,12 @@ const StoreProductsScreen = props =>{
         </View>
         <View style={styles.tabView}>
         <Text style={styles.categoryTitle}>All Products</Text>
-        <FlatList data={products} horizontal={true} keyExtractor={item=> item.id.toString()}
+        <FlatList data={storeProducts} horizontal={true} keyExtractor={item=> item.id.toString()}
         showsVerticalScrollIndicator ={false}
         showsHorizontalScrollIndicator={false} renderItem={renderProduct}/>
         </View>
         {productCategories && productCategories.map(category => {
-            const categoryProducts = products.filter(item=> item.category===category);
+            const categoryProducts = storeProducts.filter(item=> item.category===category);
             if(categoryProducts.length>0)
             { return (
                 <View style={styles.tabView} key={category}>

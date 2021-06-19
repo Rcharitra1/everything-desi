@@ -9,9 +9,18 @@ import Colors from '../constants/Colors';
 import FontSizes from '../constants/FontSizes';
 import OrderScreen, {screenOptions as orderScreenOptions} from '../screens/customer/OrderScreen'
 import CartScreen from '../screens/customer/CartScreen';
+import StoreHomeScreen, {screenOptions as storeHomeScreenOptions} from '../screens/admin/StoreHomeScreen';
+import StoreProductHomeScreen, {screenOptions as storeProductHomeScreenOptions} from '../screens/admin/StoreProductHomeScreen';
+
+
+import * as roles from '../constants/Roles';
 
 
 
+const User = {
+    role:roles.ROLE_ADMIN,
+    id:'Admin'
+};
 const defaultNavOptions = {
     headerStyle:{
         backgroundColor:Platform.OS==='android'? Colors.primary:''
@@ -48,11 +57,42 @@ const OrderNavigator = ()=>{
     );
 }
 
+//Role Admin Navigation Options 
+
+
+const AdminStackNavigator = createStackNavigator();
+
+const AdminNavigator = ()=>{
+    return(
+        <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
+        <AdminStackNavigator.Screen name='Home' component={StoreHomeScreen} options={storeHomeScreenOptions}/>
+        <AdminStackNavigator.Screen name='AddEditProduct'
+        component={StoreProductHomeScreen} options={storeProductHomeScreenOptions}/>
+        </AdminStackNavigator.Navigator>
+    );
+}
+
+const StoreAdminStackNavigator = createStackNavigator();
+const StoreAdminNavigator=()=>{
+
+    return(
+        <StoreAdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
+        <StoreAdminStackNavigator.Screen name='StoreHome' component={StoreProductHomeScreen}/>
+        </StoreAdminStackNavigator.Navigator>
+    );
+}
+
 const MainDrawerNavigator = createDrawerNavigator();
 export const MainNavigator = ()=>{
     return(
     <MainDrawerNavigator.Navigator drawerContentOptions={{activeTintColor:Colors.primary}}>
     <MainDrawerNavigator.Screen name='Store' component={StoreNavigator}/>
     <MainDrawerNavigator.Screen name='Orders' component={OrderNavigator}/>
+    {
+        User.role===roles.ROLE_ADMIN && <MainDrawerNavigator.Screen name='AdminStores' component={AdminNavigator}/>
+    }
+    {
+        User.role===roles.ROLE_STORE_ADMIN && <MainDrawerNavigator.Screen name='StoreAdmin' component={StoreAdminNavigator}/>
+    }
     </MainDrawerNavigator.Navigator>);
 }
