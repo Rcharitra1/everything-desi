@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableNativeFeedback, StyleSheet, View, Image, Text, TouchableOpacity, Platform, ImageBackground } from 'react-native'
+import { TouchableNativeFeedback, StyleSheet, View, Text, TouchableOpacity, Platform, ImageBackground } from 'react-native'
 import CustomButton from '../ui/CustomButton';
 import Colors from '../../constants/Colors';
 import FontSizes from '../../constants/FontSizes';
@@ -33,13 +33,13 @@ const ProductTab = props =>{
        }
      
         <View style={styles.buttonContainer}>
-        <CustomButton style={{...styles.buttons}} onPress={props.onPress}>Details</CustomButton>
+        <CustomButton style={{...styles.buttons}} onPress={props.onPress}>{props.buttonTitle}</CustomButton>
         {
             props.disabled ? 
             <DisabledButton style={{...styles.button}}>Out Of Stock</DisabledButton>
             :
             
-            <CustomButton style={{backgroundColor:Colors.success, ...styles.buttons}} onPress={props.toCart}>Add To Cart</CustomButton>
+            <CustomButton style={{backgroundColor:Colors.success, ...styles.buttons}} onPress={props.secondOnPress}>{props.secondButtonTitle}</CustomButton>
         }
         
       

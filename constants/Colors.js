@@ -3,7 +3,8 @@ export default {
     secondary: '#75caeb',
     success: '#41d7a7',
     danger: '#fd7e14',
-    dark: '#555'
+    dark: '#555',
+    error:'#B00020'
 
 }
 

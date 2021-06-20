@@ -1,5 +1,6 @@
 
-import { GET_STORES, GET_FEATURED_STORES, GET_CATEGORY_STORES } from "../actions/stores";
+import Store from "../../models/store";
+import { GET_STORES, GET_FEATURED_STORES, GET_CATEGORY_STORES, CREATE_STORE } from "../actions/stores";
 
 const initialState = {
     stores:[],
@@ -26,6 +27,21 @@ export default  (state=initialState, action)=>{
             return{
                 ...state,
                 storeCategories:action.storeCategories
+            }
+
+        case CREATE_STORE:
+            return{
+                ...state,
+                stores: state.stores.push(new Store(
+                    action.store.id,
+                    action.store.title,
+                    action.store.imageUrl,
+                    action.store.type,
+                    action.store.address,
+                    action.store.phone,
+                    action.store.email,
+                    action.store.isFeatured
+                ))
             }
     }
 

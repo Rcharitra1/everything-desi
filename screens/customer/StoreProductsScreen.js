@@ -57,16 +57,21 @@ const StoreProductsScreen = props =>{
 
     const renderProduct = itemData =>{
         return <ProductTab imageUrl={itemData.item.imageUrl} title={itemData.item.title} price={itemData.item.price.toFixed(2)} onPress={onSelectClick.bind(this, itemData.item.id,  itemData.item.title)}
-        toCart={onAddToCart.bind(this, itemData.item.id, itemData.item.title, itemData.item.price, itemData.item.discount, itemData.item.storeId)} discounted={itemData.item.discount>0 ? true : false} discount={itemData.item.discount} disabled={itemData.item.quantity<=0 ? true : false}/>
+        buttonTitle={'Details'}
+        secondButtonTitle={'Add To Cart'}
+        secondOnPress={onAddToCart.bind(this, itemData.item.id, itemData.item.title, itemData.item.price, itemData.item.discount, itemData.item.storeId)} discounted={itemData.item.discount>0 ? true : false} discount={itemData.item.discount} disabled={itemData.item.quantity<=0 ? true : false}/>
     }
 
     return(
         <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-        <View style={styles.tabView} >
-        <Text style={styles.categoryTitle}>Discounted Products</Text>
-        <FlatList data={discountedProducts} horizontal={true} keyExtractor={item=> item.id.toString()} renderItem={renderProduct}  showsVerticalScrollIndicator ={false}
-        showsHorizontalScrollIndicator={false}/>
-        </View>
+        {  discountedProducts.length>0 &&
+            <View style={styles.tabView} >
+            <Text style={styles.categoryTitle}>Discounted Products</Text>
+            <FlatList data={discountedProducts} horizontal={true} keyExtractor={item=> item.id.toString()} renderItem={renderProduct}  showsVerticalScrollIndicator ={false}
+            showsHorizontalScrollIndicator={false}/>
+            </View>
+        }
+        
         <View style={styles.tabView}>
         <Text style={styles.categoryTitle}>All Products</Text>
         <FlatList data={storeProducts} horizontal={true} keyExtractor={item=> item.id.toString()}

@@ -15,11 +15,12 @@ const StoreHomeScreen = props =>{
         return<StoreTab imageUrl={itemData.item.imageUrl}
         title={itemData.item.title}
         buttonTitle={'Edit Store'} secondButtonTitle={'View Products'} secondOnPress={()=>{
-            props.navigation.navigate('AddEditProduct',{
-                storeId:itemData.item.id
+            props.navigation.navigate('ListStoreProduct',{
+                storeId:itemData.item.id,
+                headerTitle:itemData.item.title
             })
         }} onPress={()=>{
-            props.navigation.navigate('EditAddStore', {storeId:itemData.item.id})
+            props.navigation.navigate('CreateEditStore', {storeId:itemData.item.id, headerTitle:'Edit Store'})
         }}/>
     }
 
@@ -43,9 +44,7 @@ export const screenOptions = (navData)=>{
         headerRight: ()=>(
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
             <Item iconName={Platform.OS==='android'? 'md-add':'ios-add'} onPress={()=>{
-                navData.navigation.navigate('StoreEditCreateScreen', {
-                    headerTitle:'Create Store'
-                })
+                navData.navigation.navigate('CreateEditStore', {headerTitle:'Add Store'})
             }}/>
             </HeaderButtons>
         ),

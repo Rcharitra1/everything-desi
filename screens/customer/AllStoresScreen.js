@@ -14,6 +14,7 @@ const AllStoreScreen = props =>{
 
     const dispatch = useDispatch();
 
+
     const [isLoading, setIsLoading]=useState(false);
     useEffect(()=>{
         setIsLoading(true);

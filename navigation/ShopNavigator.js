@@ -12,6 +12,8 @@ import CartScreen from '../screens/customer/CartScreen';
 import StoreHomeScreen, {screenOptions as storeHomeScreenOptions} from '../screens/admin/StoreHomeScreen';
 import StoreProductHomeScreen, {screenOptions as storeProductHomeScreenOptions} from '../screens/admin/StoreProductHomeScreen';
 
+import ProductAddEditScreen, {screenOptions as productAddEditScreenOptions} from '../screens/admin/ProductAddEditScreen';
+import EditCreateStoreScreen, {screenOptions as editCreateStoreScreenOptions} from '../screens/admin/EditCreateStoreScreen';
 
 import * as roles from '../constants/Roles';
 
@@ -66,8 +68,10 @@ const AdminNavigator = ()=>{
     return(
         <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
         <AdminStackNavigator.Screen name='Home' component={StoreHomeScreen} options={storeHomeScreenOptions}/>
-        <AdminStackNavigator.Screen name='AddEditProduct'
+        <AdminStackNavigator.Screen name='CreateEditStore' component={EditCreateStoreScreen} options={editCreateStoreScreenOptions}/>
+        <AdminStackNavigator.Screen name='ListStoreProduct'
         component={StoreProductHomeScreen} options={storeProductHomeScreenOptions}/>
+        <AdminStackNavigator.Screen name='AddEditProduct' options={productAddEditScreenOptions} component={ProductAddEditScreen}/>
         </AdminStackNavigator.Navigator>
     );
 }
