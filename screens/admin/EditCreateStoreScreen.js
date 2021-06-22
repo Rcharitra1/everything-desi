@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet,ScrollView, KeyboardAvoidingView,TextInput, Platform, Switch, Picker, Alert  } from 'react-native'
+import { View, Text, StyleSheet,ScrollView, KeyboardAvoidingView, Platform, Switch, Picker, Alert  } from 'react-native'
 import {useDispatch} from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'; 
 import HeaderButton from '../../components/ui/HeaderButton'
@@ -82,18 +82,13 @@ const EditCreateStoreScreen = props =>{
 
         if(Object.keys(errorContainer).length===0)
         {
-            console.log(title)
-            console.log(type)
-            console.log(email)
-            console.log(isFeatured)
-            console.log(phone)
-            console.log(image)
-            console.log(address)
+            submitClick()
         }
       
     }
 
     const submitClick = ()=>{
+        email.toLowerCase();
         dispatch(storeActions.createStore(title, image, type, address, phone, email, isFeatured)).then(()=>{
             Alert.alert('Store Created', `${title} had been created`, [{text:'Okay'}])
         })
