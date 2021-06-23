@@ -11,6 +11,7 @@ export const STORES = [
         '123, 18105 95th Ave, Edmonton T5T2Z1',
         '123-456-7890',
         'customercare@indiangrocers.com',
+        false
     ),
     new Store(
         2,
@@ -20,6 +21,7 @@ export const STORES = [
         '123, 18105 96th Ave, Edmonton T5T2Z1',
         '123-456-7891',
         'customercare@gujgrocers.com',
+        true
     ),
     new Store(
         3,
@@ -38,7 +40,8 @@ export const STORES = [
         StoreCategories.CLOTHING,
         '211, 1234 95th Ave, Calgary T5T3Z3',
         '123-456-7834',
-        'customercare@punjabgarments.com'
+        'customercare@punjabgarments.com',
+        false
     ),
     new Store(
         5,
@@ -47,7 +50,8 @@ export const STORES = [
         StoreCategories.CLOTHING,
         '222, 185 90th Ave, Toronto O5T3Z3',
         '123-456-7896',
-        'customercare@patialaclothing.com'
+        'customercare@patialaclothing.com',
+        false
     ),
     new Store(
         6,
@@ -56,7 +60,8 @@ export const STORES = [
         StoreCategories.ACCESSORIES,
         '222, 185 92th Ave, Toronto O5T3Z3',
         '123-456-7896',
-        'customercare@patialagrocers.com'
+        'customercare@patialagrocers.com',
+        false
     ),
     new Store(
         7,
@@ -65,7 +70,8 @@ export const STORES = [
         StoreCategories.SWEETS,
         '222, 185 95th Ave, Toronto O5T3Z3',
         '123-456-7896',
-        'customercare@patialagrocers.com'
+        'customercare@patialagrocers.com',
+        false
     ),
     
 ]

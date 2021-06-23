@@ -4,7 +4,8 @@ export default {
     success: '#41d7a7',
     danger: '#fd7e14',
     dark: '#555',
-    error:'#B00020'
+    error:'#B00020',
+    delete:'red'
 
 }
 

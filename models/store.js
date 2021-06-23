@@ -1,5 +1,5 @@
 class Store{
-    constructor(id, title,  imageUrl, type, address, phone, email, isFeatured)
+    constructor(id, title,  imageUrl, type, address, phone, email, isFeatured=false)
     {
         this.id = id,
         this.title = title,
@@ -7,7 +7,8 @@ class Store{
         this.type = type,
         this.address = address,
         this.phone = phone,
-        this.email = email
+        this.email = email,
+        this.isFeatured=isFeatured
     }
 }
 

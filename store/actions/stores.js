@@ -20,6 +20,8 @@ export const getStores = ()=>{
 
         const storesFromWeb = [];
 
+        // console.log(resData)
+
         for(const key in resData)
         {
             storesFromWeb.push(new Store(
@@ -33,10 +35,18 @@ export const getStores = ()=>{
                 resData[key].isFeatured
 
             ))
+
+            // console.log(resData[key].isFeatured)
         }
 
         const combinedStores = STORES.concat(storesFromWeb)
 
+        // console.log(STORES)
+        // console.log(storesFromWeb)
+
+        // console.log(combinedStores)
+
+        // console.log(combinedStores)
         dispatch({type:GET_STORES, stores:combinedStores})
 
     }
@@ -97,7 +107,7 @@ export const createStore=(title,imageUrl, type, address, phone, email, isFeature
 
     
 
-    return async dipatch=>{
+    return async dispatch=>{
     
 
     const response = await fetch('https://everything-desi-default-rtdb.firebaseio.com/stores.json', {
@@ -162,7 +172,7 @@ export const createStore=(title,imageUrl, type, address, phone, email, isFeature
     const createUserResponse = await createUserAccount.json();
     // console.log(createUserResponse)
 
-        dipatch({type:CREATE_STORE, store:{
+        dispatch({type:CREATE_STORE, store:{
             id:resData.name,
             title,
             imageUrl,
@@ -175,3 +185,60 @@ export const createStore=(title,imageUrl, type, address, phone, email, isFeature
     }
 }
 
+
+
+export const editStore=(storeId, title,imageUrl, type, address, phone, email, isFeatured )=>{
+
+
+    return async dispatch=>{
+        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}.json`, {
+            method:'PATCH',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                title,
+                imageUrl,
+                type,
+                address,
+                phone,
+                email,
+                isFeatured
+            })
+        })
+
+        if(!response.ok)
+        {
+            throw new Error('Server error')
+        }
+
+        const resData = await response.json()
+        console.log(resData);
+        dispatch({
+            type:EDIT_STORE,
+            store:{
+                id:storeId,
+                title,
+                imageUrl,
+                type,
+                address,
+                phone,
+                email,
+                isFeatured
+            }
+        })
+    }
+
+}
+
+export const deleteStore = (storeId)=>{
+    return async dispatch=>{
+        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}.json`, {
+            method:'DELETE'
+        })
+
+        const resData = await response.json();
+
+        console.log(resData)
+    }
+}

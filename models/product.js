@@ -10,6 +10,7 @@ class Product {
         this.price = price,
         this.storeId = storeId,
         this.discount = discount
+  
     }
 }
 

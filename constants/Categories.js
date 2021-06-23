@@ -10,7 +10,7 @@ export const ProductCategories={
     BEVERAGE:'Beverage',
     SNACKS:'Snacks',
     VEGETABLES:'Vegetables',
-    JEWELLARY:'Accessories',
+    JEWELLARY:'Jewellary',
     CLOTHING:'Clothing',
     ACCESSORIES:'Accessories'
 }

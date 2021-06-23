@@ -8,7 +8,7 @@ const InputTab = props =>{
         <View style={styles.outerView}>
         <Text style={styles.label}>{props.label}</Text>
         <View style={styles.innerView}>
-        <TextInput style={styles.textInput} onChangeText={props.onChange} value={props.value} textContentType={props.type} keyboardType={props.keyboardType}/>
+        <TextInput style={styles.textInput} onChangeText={props.onChange} value={props.value} textContentType={props.type} keyboardType={props.keyboardType} autoCapitalize={props.autoCapitalize}/>
         </View>
         {
             props.error &&

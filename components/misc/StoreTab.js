@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableNativeFeedback, StyleSheet, View, Image, Text, TouchableOpacity, Platform, Dimensions } from 'react-native'
+import { TouchableNativeFeedback, StyleSheet, View, Image, Text, TouchableOpacity, Platform, Dimensions, ImageBackground } from 'react-native'
 import CustomButton from '../ui/CustomButton';
 import Colors from '../../constants/Colors';
 import FontSizes from '../../constants/FontSizes';
@@ -13,8 +13,9 @@ const StoreTab = props =>{
         <TouchUI activeOpacity={0.25} onPress={props.onPress}>
     
         <View style={styles.tabView}>
-        <Image source={{uri:props.imageUrl}} style={styles.tabImage}/>
+        <Image source={{uri:props.imageUrl}} style={{...styles.tabImage, ...props.thirdButtonHeight}}/>
         <Text style={styles.tabText}>{props.title}</Text>
+        
         <View style={styles.buttonContainer}>
         <CustomButton style={styles.button} onPress={props.onPress}>{props.buttonTitle}</CustomButton>
         {
@@ -22,6 +23,12 @@ const StoreTab = props =>{
         }
         </View>
        
+      
+        {
+            props.thirdButtonHeight &&
+            <CustomButton onPress={props.thirdOnPress} style={{backgroundColor:Colors.delete, width:310}}>Delete</CustomButton>
+        }
+        
       
         </View>
         </TouchUI>

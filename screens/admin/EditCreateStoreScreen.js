@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet,ScrollView, KeyboardAvoidingView, Platform, Switch, Picker, Alert  } from 'react-native'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'; 
 import HeaderButton from '../../components/ui/HeaderButton'
 import * as storeActions from '../../store/actions/stores';
@@ -17,13 +17,16 @@ const EditCreateStoreScreen = props =>{
     }
 
     const storeId = props.route.params.storeId;
-    const [title, setTitle] = useState('')
-    const [email, setEmail]=useState('')
-    const [phone, setPhone]=useState('')
-    const [type, setType]=useState(storeId? '': categories[0]);
-    const [isFeatured, setIsFeatured]=useState(false);
-    const [image, setImage]=useState('');
-    const [address, setAddress]=useState('')
+
+    const store = useSelector(state => state.stores.stores.find(item=> item.id===storeId));
+    // console.log(store)
+    const [title, setTitle] = useState(store? store.title:'')
+    const [email, setEmail]=useState(store?store.email:'')
+    const [phone, setPhone]=useState(store? store.phone:'')
+    const [type, setType]=useState(store? categories[categories.indexOf(store.type)] : categories[0]);
+    const [isFeatured, setIsFeatured]=useState(store ? store.isFeatured : false);
+    const [image, setImage]=useState(store? store.imageUrl:'');
+    const [address, setAddress]=useState(store ? store.address: '')
     const [error, setError]=useState({})
 
 
@@ -89,9 +92,20 @@ const EditCreateStoreScreen = props =>{
 
     const submitClick = ()=>{
         email.toLowerCase();
-        dispatch(storeActions.createStore(title, image, type, address, phone, email, isFeatured)).then(()=>{
-            Alert.alert('Store Created', `${title} had been created`, [{text:'Okay'}])
-        })
+        if(store)
+        {
+            dispatch(storeActions.editStore(storeId, title, image, type, address, phone, email, isFeatured)).then(()=>{
+                Alert.alert('Store Updated', `${title} had been created`, [{text:'Okay'}])
+            })
+            // console.log('successfull')
+        }else
+        {
+            dispatch(storeActions.createStore(title, image, type, address, phone, email, isFeatured)).then(()=>{
+                Alert.alert('Store Created', `${title} had been updated`, [{text:'Okay'}])
+            })
+            // console.log('Unsuccessfull')
+        }
+       
     }
 
     const dispatch = useDispatch();
@@ -112,7 +126,7 @@ const EditCreateStoreScreen = props =>{
         <ScrollView>
         <View style={styles.screen}>
         <InputTab onChange={(text)=> setTitle(text)} value={title} label={'Title'} error={error? error.title:''}/>
-        <InputTab onChange={(text)=> setEmail(text) }value={email} label={'Email'} type={'emailAddress'} error={error? error.email:''}/>
+        <InputTab onChange={(text)=> setEmail(text) }value={email} label={'Email'} type={'emailAddress'} error={error? error.email:''} autoCapatalize={'none'}/>
         <InputTab onChange={(text)=> setPhone(text) }value={phone} label={'Phone'} error={error? error.phone:''}/>
         <InputTab onChange={(text)=> setImage(text)} value={image} label={'Image'} error={error? error.image:''}/>
         <InputTab onChange={(text)=> setAddress(text) }value={address} label={'Address'} error={error? error.address:''}/>
