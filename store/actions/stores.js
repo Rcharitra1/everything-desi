@@ -9,6 +9,7 @@ export const EDIT_STORE='EDIT_STORE';
 export const DELETE_STORE='DELETE_STORE'
 import Store from '../../models/store';
 import apiKey from '../../project_api/apiKey';
+// import { StoreCategories } from '../../constants/Categories';
 
 
 
@@ -36,17 +37,11 @@ export const getStores = ()=>{
 
             ))
 
-            // console.log(resData[key].isFeatured)
         }
 
         const combinedStores = STORES.concat(storesFromWeb)
 
-        // console.log(STORES)
-        // console.log(storesFromWeb)
 
-        // console.log(combinedStores)
-
-        // console.log(combinedStores)
         dispatch({type:GET_STORES, stores:combinedStores})
 
     }
@@ -86,13 +81,13 @@ export const getFeaturedStore = ()=>{
 export const getCategoryStores =()=>{
 
 
-    let storeCategories = [];
-    for(let i=0; i<STORES.length; i++)
+
+
+    const storeCategories = [];
+
+    for(const key in StoreCategories)
     {
-        if(storeCategories.indexOf(STORES[i].type)<0)
-        {
-            storeCategories.push(STORES[i].type);
-        }
+        storeCategories.push(StoreCategories[key])
     }
 
 
@@ -223,7 +218,6 @@ export const editStore=(storeId, title,imageUrl, type, address, phone, email, is
                 type,
                 address,
                 phone,
-                email,
                 isFeatured
             }
         })
@@ -239,6 +233,9 @@ export const deleteStore = (storeId)=>{
 
         const resData = await response.json();
 
-        console.log(resData)
+       dispatch({
+           type:DELETE_STORE,
+           storeId
+       })
     }
 }

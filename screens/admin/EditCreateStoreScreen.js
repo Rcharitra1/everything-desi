@@ -9,7 +9,7 @@ import FontSizes from '../../constants/FontSizes';
 import { StoreCategories } from '../../constants/Categories';
 import { emailPattern, phonePattern, urlPattern } from '../../validations/masterValidator';
 const EditCreateStoreScreen = props =>{
-    let categories = [];
+    const categories = [];
 
     for(const key in StoreCategories)
     {
@@ -95,16 +95,18 @@ const EditCreateStoreScreen = props =>{
         if(store)
         {
             dispatch(storeActions.editStore(storeId, title, image, type, address, phone, email, isFeatured)).then(()=>{
-                Alert.alert('Store Updated', `${title} had been created`, [{text:'Okay'}])
+                Alert.alert('Store Updated', `${title} had been updated`, [{text:'Okay'}])
             })
             // console.log('successfull')
         }else
         {
             dispatch(storeActions.createStore(title, image, type, address, phone, email, isFeatured)).then(()=>{
-                Alert.alert('Store Created', `${title} had been updated`, [{text:'Okay'}])
+                Alert.alert('Store Created', `${title} had been created`, [{text:'Okay'}])
             })
             // console.log('Unsuccessfull')
         }
+
+        props.navigation.goBack()
        
     }
 
@@ -126,7 +128,7 @@ const EditCreateStoreScreen = props =>{
         <ScrollView>
         <View style={styles.screen}>
         <InputTab onChange={(text)=> setTitle(text)} value={title} label={'Title'} error={error? error.title:''}/>
-        <InputTab onChange={(text)=> setEmail(text) }value={email} label={'Email'} type={'emailAddress'} error={error? error.email:''} autoCapatalize={'none'}/>
+        <InputTab onChange={(text)=> setEmail(text) }value={email} label={'Email'} type={'emailAddress'} error={error? error.email:''} autoCapatalize={'none'} editable={store? false: true} style={store?{backgroundColor:'lightgrey'}:''}/>
         <InputTab onChange={(text)=> setPhone(text) }value={phone} label={'Phone'} error={error? error.phone:''}/>
         <InputTab onChange={(text)=> setImage(text)} value={image} label={'Image'} error={error? error.image:''}/>
         <InputTab onChange={(text)=> setAddress(text) }value={address} label={'Address'} error={error? error.address:''}/>

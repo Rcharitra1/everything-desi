@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView, Picker   } from 'react-native'
+import { View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView, Picker, Alert   } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import HeaderButton from '../../components/ui/HeaderButton';
@@ -10,17 +10,16 @@ import FontSizes from '../../constants/FontSizes';
 
 const ProductAddEditScreen = props =>{
     const storeId = props.route.params.storeId
-    console.log(storeId)
+    // console.log(storeId)
 
+    const productId = props.route.params.productId
+
+    // console.log(productId)
+    const product = useSelector(state => state.products.storeProducts.find(item=> item.id===productId))
+
+    // console.log(product)
     const dispatch = useDispatch();
-
-
-   
-
-   
-
     const categories = [];
-
     for(const key in ProductCategories)
     {
         categories.push(ProductCategories[key])
@@ -28,14 +27,14 @@ const ProductAddEditScreen = props =>{
     categories.sort()
 
 
-    const [title, setTitle] = useState('')
-    const [imageUrl, setImageUrl]=useState('')
-    const [description, setDescription]=useState('');
+    const [title, setTitle] = useState(product? product.title:'')
+    const [imageUrl, setImageUrl]=useState(product ? product.imageUrl :'')
+    const [description, setDescription]=useState(product? product.description:'');
 
-    const [category, setCategory]=useState(categories[0])
-    const [quantity, setQuantity] = useState(0);
-    const [price, setPrice]=useState(0.00);
-    const [discount, setDiscount]=useState(0.0);
+    const [category, setCategory]=useState(product? categories[categories.indexOf(product.category)]:categories[0])
+    const [quantity, setQuantity] = useState(product? product.quantity:0);
+    const [price, setPrice]=useState(product? product.price:0.00);
+    const [discount, setDiscount]=useState(product? product.discount :0.0);
 
     const [error, setError]=useState({})
 
@@ -90,7 +89,24 @@ const ProductAddEditScreen = props =>{
     }
 
     const submitHandler = ()=>{
-        dispatch(productActions.createProduct(storeId, title, category, imageUrl, description, quantity, price, discount))
+
+        if(product)
+        {
+            dispatch(productActions.editProduct(storeId,productId, category, imageUrl, description, quantity, price, discount, title)).then(()=>{
+                Alert.alert('Product Updated', `${title} Successfully updated`, [{text:'Okay'}])
+                
+            })
+        }else
+        {
+            dispatch(productActions.createProduct(storeId, title, category, imageUrl, description, quantity, price, discount)).then(()=>{
+                Alert.alert('Product Added', `${title} Successfully Added`, [{text:'Okay'}])
+            })
+        }
+
+        props.navigation.goBack()
+
+        
+        
     }
 
 
@@ -115,7 +131,7 @@ const ProductAddEditScreen = props =>{
 
         <View style={styles.pickerBox}>
         <Text style={styles.pickerLabel}>Category</Text>
-        <Picker pickerStyle={styles.pickerStyle} onValueChange={(item)=> setCategory(item)} value={category}>
+        <Picker pickerStyle={styles.pickerStyle} onValueChange={(item)=> setCategory(item)} selectedValue={category}>
         {
             categories.map((item, index)=>{
                 return <Picker.Item key={index+1} value={item} label={item} />

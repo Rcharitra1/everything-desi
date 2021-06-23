@@ -1,6 +1,6 @@
 
 import Store from "../../models/store";
-import { GET_STORES, GET_FEATURED_STORES, GET_CATEGORY_STORES, CREATE_STORE } from "../actions/stores";
+import { GET_STORES, GET_FEATURED_STORES, GET_CATEGORY_STORES, CREATE_STORE, EDIT_STORE, DELETE_STORE } from "../actions/stores";
 
 const initialState = {
     stores:[],
@@ -43,6 +43,45 @@ export default  (state=initialState, action)=>{
                     action.store.isFeatured
                 ))
             }
+        case EDIT_STORE:
+            const copyStores = [...state.stores];
+            const updatedStoreIndex=copyStores.findIndex((item)=> item.id===action.store.id);
+
+            copyStores[updatedStoreIndex].title= action.store.title;
+            copyStores[updatedStoreIndex].imageUrl=action.store.imageUrl;
+            copyStores[updatedStoreIndex].type=action.store.type;
+            copyStores[updatedStoreIndex].address=action.store.address,
+            copyStores[updatedStoreIndex].phone=action.store.phone,
+            copyStores[updatedStoreIndex].isFeatured=action.store.isFeatured;
+
+            return{
+                ...state,
+                stores:[...copyStores]
+            }
+
+        case DELETE_STORE:
+            const copyStoresToDelete = [...state.stores];
+            const storeIndex = copyStoresToDelete.findIndex(item=> item.id===action.storeId)
+            if(copyStores[storeIndex].isFeatured)
+            {
+                copyStoresToDelete.splice(storeIndex, 1);
+
+                return{
+                    ...state,
+                    stores:[...copyStoresToDelete],
+                    featuredStores: state.featuredStores.filter(item=> item.id===action.storeId)
+                }
+
+            }else
+            {
+                copyStoresToDelete.splice(storeIndex, 1);
+                return{
+                    ...state,
+                    store:[...copyStoresToDelete]
+                }
+            }
+
+
     }
 
     return state;

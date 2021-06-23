@@ -125,3 +125,46 @@ export const deleteProduct=(storeId, productId)=>{
         dispatch({type:DELETE_PRODUCT})
     }
 }
+
+export const editProduct= (storeId, productId, category, description, discount, imageUrl, price, quantity, title)=>{
+    return async dispatch=>{
+        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}/products/${productId}.json`, {
+            method:'PATCH',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                category:category,
+                description:description,
+                discount:discount,
+                imageUrl:imageUrl,
+                price:price,
+                quantity:quantity,
+                storeId:storeId,
+                title:title
+            })
+        })
+
+        if(!response.ok)
+        {
+            throw new Error('Server error');
+        }
+
+        const resData = await response.json();
+        console.log(resData);
+
+        dispatch({
+            type:EDIT_PRODUCT,
+            product:{
+                productId,
+                category,
+                description,
+                discount,
+                imageUrl,
+                price,
+                quantity,
+                title
+            }
+        })
+    }
+}

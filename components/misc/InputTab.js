@@ -7,8 +7,8 @@ const InputTab = props =>{
     return(
         <View style={styles.outerView}>
         <Text style={styles.label}>{props.label}</Text>
-        <View style={styles.innerView}>
-        <TextInput style={styles.textInput} onChangeText={props.onChange} value={props.value} textContentType={props.type} keyboardType={props.keyboardType} autoCapitalize={props.autoCapitalize}/>
+        <View style={{...styles.innerView,...props.style }}>
+        <TextInput style={{...styles.textInput}} onChangeText={props.onChange} value={props.value} textContentType={props.type} keyboardType={props.keyboardType}  editable={props.editable} autoCapitalize={props.autoCapitalize}/>
         </View>
         {
             props.error &&
@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
         paddingHorizontal:10,
         shadowOffset:{height:3, width:0},
         elevation:6,
-        shadowOpacity:0.25
+        shadowOpacity:0.25,
+        
     },
     label:{
         fontFamily:'roboto-bold',

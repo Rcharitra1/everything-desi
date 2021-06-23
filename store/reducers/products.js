@@ -1,4 +1,5 @@
 import { GET_DISCOUNTED_PRODUCTS, GET_PRODUCT_CATEGORIES, GET_STORE_PRODUCTS, SET_ALL_PRODUCTS } from "../actions/products";
+import {DELETE_STORE} from '../actions/stores';
 
 import {ADD_TO_CART, REMOVE_FROM_CART} from '../actions/cart';
 
@@ -70,7 +71,28 @@ export default (state=initialState, action)=>{
                 products: [...copyProducts]
             }
         }
+        case DELETE_STORE:
+
+            const copyStoreProducts = [...state.storeProducts];
+            let isCurrentStore=false;
+            for(let i=0; i<copyStoreProducts.length;i++)
+            {
+                if(copyStoreProducts[i].storeId===action.storeId)
+                {
+                    isCurrentStore=true
+                }
+            }
+
+            return{
+                ...state,
+                products: state.products.filter(item=> item.storeId===action.storeId),
+                discountedProducts:state.discountedProducts.filter(item=> item.storeId===action.storeId),
+                storeProducts: isCurrentStore? []:[...copyStoreProducts]
+            }
+
     }
+
+
     return state;
 
 }
