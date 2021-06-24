@@ -1,12 +1,16 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { StoreNavigator, MainNavigator } from './ShopNavigator';
+import {  MainNavigator, AuthNavigator  } from './ShopNavigator';
+
+
+
 
 const AppNavigator = props =>{
     return(
         <NavigationContainer>
-        <MainNavigator/>
+        <AuthNavigator/>
         </NavigationContainer>
     );
 }

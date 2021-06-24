@@ -14,6 +14,7 @@ import StoreProductHomeScreen, {screenOptions as storeProductHomeScreenOptions} 
 
 import ProductAddEditScreen, {screenOptions as productAddEditScreenOptions} from '../screens/admin/ProductAddEditScreen';
 import EditCreateStoreScreen, {screenOptions as editCreateStoreScreenOptions} from '../screens/admin/EditCreateStoreScreen';
+import AuthScreen, {screenOptions as authScreenOptions} from '../screens/auth/AuthScreen';
 
 import * as roles from '../constants/Roles';
 
@@ -99,4 +100,13 @@ export const MainNavigator = ()=>{
         User.role===roles.ROLE_STORE_ADMIN && <MainDrawerNavigator.Screen name='StoreAdmin' component={StoreAdminNavigator}/>
     }
     </MainDrawerNavigator.Navigator>);
+}
+
+const AuthStackNavigator = createStackNavigator();
+export const AuthNavigator=()=>{
+    return(
+        <AuthStackNavigator.Navigator screenOptions={defaultNavOptions}>
+        <AuthStackNavigator.Screen name='Login' component={AuthScreen} options={authScreenOptions}/>
+        </AuthStackNavigator.Navigator>
+    );
 }
