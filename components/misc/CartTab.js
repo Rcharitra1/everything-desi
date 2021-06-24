@@ -55,7 +55,7 @@ const CartTab = props =>{
         <View style={styles.cardView}>
         
         <View style={styles.header}>
-        <Text style={styles.order}>{props.orderId.split('-')[0]}</Text>
+        <Text style={styles.order}>{props.orderId.split('-')[1]}</Text>
         
         <Text style={styles.store}>{store.title}</Text>
         <Text style={styles.date}>{new Date(props.date).toLocaleDateString()}</Text>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     },
     order:{
         fontFamily:'roboto',
-        fontSize:FontSizes.small,
+        fontSize:12,
         flexBasis:'20%'
     },
     store:{

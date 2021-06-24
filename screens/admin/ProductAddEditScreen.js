@@ -92,7 +92,8 @@ const ProductAddEditScreen = props =>{
 
         if(product)
         {
-            dispatch(productActions.editProduct(storeId,productId, category, imageUrl, description, quantity, price, discount, title)).then(()=>{
+            
+            dispatch(productActions.editProduct(storeId, productId, category, description, discount, imageUrl, price, quantity, title)).then(()=>{
                 Alert.alert('Product Updated', `${title} Successfully updated`, [{text:'Okay'}])
                 
             })

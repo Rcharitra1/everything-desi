@@ -61,14 +61,18 @@ const AllStoreScreen = props =>{
         </View>
         {storeCategories && storeCategories.map((type)=>{
             const categoryStores = allStores.filter((item)=> item.type===type)
-            return(
-                <View key={type} style={styles.tabletView}>
-            <Text style={styles.categoryTitle}>{type.toString().slice(0, 1).toUpperCase()+type.toString().slice(1, type.length)}</Text>
-            <FlatList data={categoryStores} horizontal={true} renderItem={renderTabs} 
-            keyExtractor={(item)=> item.id.toString()}  showsVerticalScrollIndicator ={false}
-            showsHorizontalScrollIndicator={false}/>
-            </View>
-            );
+            if(categoryStores.length>0)
+            {
+                return(
+                    <View key={type} style={styles.tabletView}>
+                <Text style={styles.categoryTitle}>{type.toString().slice(0, 1).toUpperCase()+type.toString().slice(1, type.length)}</Text>
+                <FlatList data={categoryStores} horizontal={true} renderItem={renderTabs} 
+                keyExtractor={(item)=> item.id.toString()}  showsVerticalScrollIndicator ={false}
+                showsHorizontalScrollIndicator={false}/>
+                </View>
+                );
+            }
+            
         })}
       
 

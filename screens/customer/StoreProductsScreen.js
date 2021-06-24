@@ -21,7 +21,6 @@ const StoreProductsScreen = props =>{
         setIsLoading(true)
         dispatch(productActions.setAllProducts());
         dispatch(productActions.getStoreProducts(storeId))
-        dispatch(productActions.getDiscountedProducts(storeId))
  
         dispatch(productActions.getProductCategories())
         setIsLoading(false)
@@ -35,8 +34,9 @@ const StoreProductsScreen = props =>{
     }
 
 
-    const {storeProducts, discountedProducts, productCategories}=useSelector(state=> state.products);
+    const {storeProducts, productCategories}=useSelector(state=> state.products);
 
+    const discountedProducts = storeProducts.filter(item=> item.discount>0)
     if(storeProducts.length===0 && discountedProducts.length===0)
     {
         return (<View style={styles.screen}><Text style={styles.noProducts}>No Products Available</Text></View>)
@@ -56,7 +56,8 @@ const StoreProductsScreen = props =>{
     }
 
     const renderProduct = itemData =>{
-        return <ProductTab imageUrl={itemData.item.imageUrl} title={itemData.item.title} price={itemData.item.price.toFixed(2)} onPress={onSelectClick.bind(this, itemData.item.id,  itemData.item.title)}
+        // console.log(itemData.item)
+        return <ProductTab imageUrl={itemData.item.imageUrl} title={itemData.item.title} price={parseFloat(itemData.item.price).toFixed(2)} onPress={onSelectClick.bind(this, itemData.item.id,  itemData.item.title)}
         buttonTitle={'Details'}
         secondButtonTitle={'Add To Cart'}
         secondOnPress={onAddToCart.bind(this, itemData.item.id, itemData.item.title, itemData.item.price, itemData.item.discount, itemData.item.storeId)} discounted={itemData.item.discount>0 ? true : false} discount={itemData.item.discount} disabled={itemData.item.quantity<=0 ? true : false}/>

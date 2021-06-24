@@ -8,11 +8,11 @@ export default (state=initialState, action)=>{
     switch(action.type)
     {
         case GET_ALL_USER_ORDERS:
-            const copyOrders = [...state.orders];
-            copyOrders.filter(item=> item.customerId===action.userId)
+            // const copyOrders = [...state.orders];
+            // copyOrders.filter(item=> item.customerId===action.userId)
             return{
                 ...state,
-                orders : [...copyOrders]
+                orders : action.orders
             }
         case PLACE_ORDER:
             const copyArray = [...state.orders];

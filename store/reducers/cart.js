@@ -23,6 +23,8 @@ const calculateTotal = (items)=>{
                         totalsObj.tax = (totalsObj.total * 0.05);
                         totalsObj.discount += (items[k].price * items[k].quantity * items[k].discount)   
                     }
+
+            // console.log(totalsObj)
                 return totalsObj
 
 }
@@ -107,8 +109,10 @@ export default (state=initialState, action)=>{
                 const {tax, total, discount}=
                 calculateTotal(orderItem.items)
 
+                console.log(discount)
+
                 orderItem.tax = tax;
-                orderItem.discount = discount,
+                orderItem.totalDiscount = discount,
                 orderItem.total = total,
                 orderItem.subTotal = (total - discount + tax);
                 copyCartItems.splice(objIndex, 1);
@@ -117,7 +121,7 @@ export default (state=initialState, action)=>{
             }
             copyCartItems.sort((a, b)=> a.id > b.id ? 1 : -1);
 
-            console.log(copyCartItems)
+            // console.log(copyCartItems)
 
             return{
                 ...state,

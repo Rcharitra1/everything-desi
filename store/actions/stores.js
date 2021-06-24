@@ -39,10 +39,10 @@ export const getStores = ()=>{
 
         }
 
-        const combinedStores = STORES.concat(storesFromWeb)
+        // const combinedStores = STORES.concat(storesFromWeb)
 
 
-        dispatch({type:GET_STORES, stores:combinedStores})
+        dispatch({type:GET_STORES, stores:storesFromWeb})
 
     }
 }

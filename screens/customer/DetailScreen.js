@@ -13,7 +13,12 @@ const DetailScreen = props =>{
 
 
     const {productId} = props.route.params;
+    // console.log(productId);
     let product = useSelector(state=> state.products.products.find(item=> item.id===productId))
+
+    // console.log(product)
+
+    
 
     let store = useSelector(state=> state.stores.stores.find(item=> item.id===product.storeId))
     const dispatch = useDispatch();

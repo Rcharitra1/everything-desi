@@ -40,7 +40,7 @@ const OrderScreen = props =>{
            disablePayment={true}
            item={itemData.item}
            orderId={itemData.item.id}
-           date={itemData.item.datePlaced} storeId={itemData.item.storeId} subTotal={itemData.item.subTotal} total={itemData.item.total} tax={itemData.item.tax} totalDiscount={itemData.item.totalDiscount} items={itemData.item.items}/>
+           date={itemData.item.datePlaced} storeId={itemData.item.storeId} subTotal={itemData.item.subTotal} total={parseFloat(itemData.item.total)} tax={itemData.item.tax} totalDiscount={itemData.item.totalDiscount} items={itemData.item.items}/>
         );
     }
     return(
