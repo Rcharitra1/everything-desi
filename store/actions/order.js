@@ -5,42 +5,18 @@ import Item from '../../models/Item';
 import Order from '../../models/order';
 
 
-export const placeOrder= ( orderItem )=>{
+export const placeOrder= ( orderItem, postId )=>{
 
-    // console.log(orderItem)
-    // const paid= true
-    // if(paid)
-    // {
         return async dispatch=>{
-
-            orderItem.customerId='-McloSKoUX49jJ6kkAr-';
 
 
             delete orderItem.id;
-            const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${orderItem.customerId}/orders.json`, {
+            const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${postId}/orders.json`, {
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'
                 },
-                body:JSON.stringify(
-                    // customerId:orderItem.customerId,
-                    // storeId:orderItem.storeId,
-                    // subTotal:orderItem.subTotal,
-                    // tax:orderItem.tax,
-                    // total:orderItem.total,
-                    // totalDiscount:orderItem.totalDiscount,
-                    // datePlaced:orderItem.datePlaced,
-                    // items:[{
-                    //     discount:orderItem.items[0].discount,
-                    //     id:orderItem.items[0].id,
-                    //     price:orderItem.items[0].price,
-                    //     quantity:orderItem.items[0].discount,
-                    //     title:orderItem.items[0].title
-                    // }]
-                    orderItem
-
-                )
-
+                body:JSON.stringify(orderItem)
             })
 
             if(!response.ok)
@@ -49,11 +25,9 @@ export const placeOrder= ( orderItem )=>{
             }
             const resData = await response.json();
 
-            // const jsonLook = JSON.stringify(orderItem)
-            // console.log(jsonLook)
+
             orderItem.id = resData.name
-            // orderItem.id='name';
-            // console.log(orderItem)
+
             dispatch({
                 type:PLACE_ORDER,
                 orderItem:orderItem
@@ -65,24 +39,53 @@ export const placeOrder= ( orderItem )=>{
     
 }
 
-export const placeAllOrders = (orderItems)=>{
-    // const paid=true
-    // if(paid)
-    // {
-        return{
+const postOrders = async (orderItem, postId)=>{
+    return await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${postId}/orders.json`, {
+        method:'POST',
+        headers:{
+            'Content-Type':'application/type'
+        },
+        body:JSON.stringify(orderItem)
+    })
+}
+
+export const placeAllOrders = (orderItems, postId)=>{
+    return async dispatch=>{
+
+        let results=[];
+        Promise.all(
+            orderItems.map((orderItem)=>{
+                postOrders(orderItem, postId)
+            })
+        ).then((data)=>{
+           results = [...data];
+        //    console.log(results)
+        }).catch((err)=>{
+            console.log(err)
+        })
+
+        // if(!results.ok)
+        // {
+        //     throw new Error('Server error')
+        // }
+
+        // const resultsData = await results.json();
+        // console.log(resultsData);
+        dispatch({
             type:PLACE_ALL_ORDER,
             orderItems:orderItems
-        }
-    // }
+        })
+    }
+
+       
 }
 
 
-export const getAllUserOrders = (userId)=>{
+export const getAllUserOrders = (postId)=>{
 
-    userId='-McloSKoUX49jJ6kkAr-'
 
     return async dispatch=>{
-    const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${userId}/orders.json`,{
+    const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${postId}.json`,{
         method:'GET'
     })
 
@@ -91,40 +94,34 @@ export const getAllUserOrders = (userId)=>{
         throw new Error('Server error')
     }
     const resData = await response.json();
-    // console.log(resData)
+
 
     const orderList=[];
-    for(const key in resData)
+    for(const key in resData.orders)
     {
         orderList.push(new Order(
-            key,
-            resData[key].storeId,
-            resData[key].datePlaced,
-            resData[key].items.map(item=> {
-                return new Item(
-                    item.id,
-                    item.title,
-                    item.price,
-                    item.quantity,
-                    item.discount
-                )
-            }),
-            resData[key].total,
-            resData[key].subTotal,
-            resData[key].tax,
-            resData[key].totalDiscount,
-            resData[key].customerId
-        ))
+                    key,
+                    resData.orders[key].storeId,
+                    resData.orders[key].datePlaced,
+                    resData.orders[key].items.map(item=> {
+                        return new Item(
+                            item.id,
+                            item.title,
+                            item.price,
+                            item.quantity,
+                            item.discount
+                        )
+                    }),
+                    resData.orders[key].total,
+                    resData.orders[key].subTotal,
+                    resData.orders[key].tax,
+                    resData.orders[key].totalDiscount,
+                    resData.orders[key].customerId
+                ))
     }
 
-    // console.log(orderList)
+  
 
-
-
-
-
-    
-    // console.log('im here')
     dispatch({
         type:GET_ALL_USER_ORDERS,
         orders:orderList

@@ -17,6 +17,8 @@ const StoreProductsScreen = props =>{
 
     const storeId = props.route.params.storeId;
 
+    const user = useSelector(state=> state.user);
+
     useEffect(()=>{
         setIsLoading(true)
         dispatch(productActions.setAllProducts());
@@ -50,7 +52,7 @@ const StoreProductsScreen = props =>{
     }
 
     const onAddToCart = (id,title, price, discount, storeID )=>{
-        dispatch(cartActions.addToCart(id, title, price, discount, storeID)).then(()=>{
+        dispatch(cartActions.addToCart(id, title, price, discount, storeID, user.userId)).then(()=>{
             Alert.alert('Cart', `${title} added to your cart`, [{text:'Okay'}])
         }).catch(err=> console.log(err))
     }

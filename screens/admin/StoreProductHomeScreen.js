@@ -8,7 +8,23 @@ import ProductTab from '../../components/misc/ProductTab';
 import FontSizes from '../../constants/FontSizes';
 
 const StoreProductHomeScreen = props =>{
-    const storeId = props.route.params.storeId;
+    let storeId = useSelector(state=> state.user.storeId);
+
+    
+
+
+    if(storeId===null)
+    {
+        storeId=props.route.params.storeId
+    }
+
+    const store = useSelector((state)=> state.stores.stores.find(item=> item.id===storeId))
+    // if(!storeId)
+    // {
+    //     storeId=useSelector(state=> state.user.storeId)
+    // }
+
+    console.log(storeId)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(productActions.getStoreProducts(storeId))
@@ -24,6 +40,7 @@ const StoreProductHomeScreen = props =>{
     useEffect(() => {
         
         props.navigation.setOptions({
+            headerTitle:store.title,
             headerRight:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item iconName={Platform.OS==='android'? 'md-add': 'ios-add'} onPress={()=>{
                     props.navigation.navigate('AddEditProduct', {headerTitle:'Add Product', storeId:storeId})

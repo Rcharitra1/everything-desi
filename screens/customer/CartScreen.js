@@ -8,6 +8,10 @@ import Colors from '../../constants/Colors';
 import * as orderActions from '../../store/actions/order';
 const CartScreen = props =>{
     const cartItems = useSelector(state=> state.cart.cartItems);
+    const postId = useSelector(state=> state.user.postId);
+
+
+    // console.log(cartItems)
 
 
 
@@ -22,7 +26,7 @@ const CartScreen = props =>{
         // {
         //     dispatch(orderActions.placeOrder(cartItems[i]))
         // }
-        dispatch(orderActions.placeAllOrders(cartItems))
+        dispatch(orderActions.placeAllOrders(cartItems, postId))
     }
 
 
@@ -38,6 +42,7 @@ const CartScreen = props =>{
     const renderItemData = itemData =>{
         return(
            <CartTab 
+           postId={postId}
            item={itemData.item}
            orderId={itemData.item.id}
            date={itemData.item.datePlaced} storeId={itemData.item.storeId} subTotal={itemData.item.subTotal} total={parseFloat(itemData.item.total)} tax={itemData.item.tax} totalDiscount={itemData.item.totalDiscount} items={itemData.item.items}/>

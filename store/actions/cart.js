@@ -1,6 +1,6 @@
 export const ADD_TO_CART= 'ADD_TO_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
-export const addToCart=(id, title, price, discount, storeId)=>{
+export const addToCart=(id, title, price, discount, storeId, customerId)=>{
 
     return async dispatch=>{
         dispatch({
@@ -10,7 +10,8 @@ export const addToCart=(id, title, price, discount, storeId)=>{
                 title:title,
                 price:price,
                 discount:discount,
-                storeId:storeId
+                storeId:storeId,
+                customerId:customerId
             }
         })
     }

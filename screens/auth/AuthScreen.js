@@ -1,22 +1,132 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform  } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator, Alert  } from 'react-native'
 import {useDispatch} from 'react-redux'
 import InputTab from '../../components/misc/InputTab';
 import {LinearGradient} from 'expo-linear-gradient'
 import Colors from '../../constants/Colors';
 import CustomButton from '../../components/ui/CustomButton';
 import FontSizes from '../../constants/FontSizes';
-import { styleSheets } from 'min-document';
+import {emailPattern, phonePattern} from '../../validations/masterValidator'
+import * as authActions from '../../store/actions/auth'
+import { ROLE_CUSTOMER, ROLE_ADMIN } from '../../constants/Roles';
 
 
 const AuthScreen = props =>{
 
-    const [isLogin, setIsLogin]=useState(false);
+    const [isLogin, setIsLogin]=useState(true);
+    const [name, setName] = useState('');
+    const [email, setEmail]=useState('');
+    const [password, setPassword]=useState('');
+    const [address, setAddress]=useState('');
+    const [phone, setPhone]=useState('');
+    const [isLoading, setIsLoading]=useState(false);
+    const [error, setError]=useState({})
+   
+
+
+    const dispatch = useDispatch();
+
+
+
     useEffect(() => {
         props.navigation.setOptions({
             headerTitle: isLogin ? 'Login':'Register'
         })
     }, [setIsLogin, isLogin])
+
+
+    const submitClick= ()=>{
+        setIsLoading(true);
+        
+        // let action = ''
+        if(isLogin)
+        {
+            // action = authActions.loginUser(email.toLowerCase(), password)
+
+            dispatch(authActions.loginUser(email.toLowerCase(), password)).then(()=>{
+                setIsLoading(false)
+
+            }).catch((err)=> {
+                setIsLoading(false)
+                console.log(err)})
+        }else
+        {
+            dispatch(authActions.createUser(email.toLowerCase(), password, address, phone, name, ROLE_CUSTOMER)).then(()=>{
+                console.log('im here')
+                setIsLoading(false);
+                setIsLogin(true);
+                Alert.alert('Account Created',`Welcome ${name}, pls sign in with email and password`,[{text:'Okay'}] )
+            }).catch((err)=> {
+                setIsLoading(false)
+                console.log(err)})
+        }
+        
+
+    }
+
+
+    const submitForm = ()=>
+    {
+        setError({});
+
+        const errorContainer ={};
+        if(email.trim().length===0 || password.trim().length===0)
+        {
+            if(email.trim().length===0)
+            {
+                errorContainer.email='Pls provide a valid email';
+            }
+
+            if(password.trim().length===0)
+            {
+                errorContainer.password='Pls provide a valid password';
+            }
+        }
+
+        if(!isLogin && (address.trim().length===0 || name.trim().length===0 || phone.trim().length===0))
+        {
+            if(address.trim().length===0)
+            {
+                errorContainer.address='Pls enter a valid address';
+            }
+            if(phone.trim().length===0)
+            {
+                errorContainer.phone='Pls enter a valid phone';
+            }
+            if(name.trim().length===0)
+            {
+                errorContainer.name='Pls enter a a valid name';
+            }
+        }
+
+
+        if(!isLogin && !phonePattern.test(phone))
+        {
+            errorContainer.phone='Pls provide a valid number i.e. 123-345-6789';
+        }
+
+        if(email.trim().length!==0 && !emailPattern.test(email))
+        {
+            errorContainer.email='Pls provide a valid email i.e. user@test.com'
+        }
+        if(password.trim().length!==0 && (password.trim().length<6 || password.trim().length>10) )
+        {
+            errorContainer.password = 'Pls enter a valid password i.e. between 6 to 10 characters length'
+        }
+
+        setError(errorContainer)
+        if(Object.keys(errorContainer).length===0)
+        {
+            submitClick()
+        }
+    }
+
+    if(isLoading)
+    {
+        return <View style={styles.loading}><ActivityIndicator size={'large'} color={Colors.primary}/></View>
+    }
+
+
     return(
 
 
@@ -26,12 +136,12 @@ const AuthScreen = props =>{
           
             <LinearGradient style={styles.tabView} colors={[Colors.primary, Colors.secondary]}>
             <Text style={styles.title}>{isLogin? 'Login':'Register'}</Text>
-            {!isLogin && <InputTab label={'Name'}/>}
-            <InputTab label={'Email'}/>
-            <InputTab label={'Password'}/>
-            {!isLogin && <InputTab label={'Address'}/>}
-            {!isLogin && <InputTab label={'Phone'}/>}
-            <CustomButton style={styles.button}>{isLogin? 'Login' :'Register'}</CustomButton>
+            {!isLogin && <InputTab label={'Name'} value={name} onChange={(text)=> setName(text)} error={error ? error.name : ''}/>}
+            <InputTab label={'Email'} onChange={(text)=> setEmail(text)} value={email} error={error ? error.email : ''}/>
+            <InputTab label={'Password'} value={password} onChange={(text)=> setPassword(text)} type={'password'}  error={error? error.password : ''} />
+            {!isLogin && <InputTab label={'Address'} value={address} onChange={text=> setAddress(text)} error={error ? error.address : ''} />}
+            {!isLogin && <InputTab label={'Phone'} value={phone} onChange={text=> setPhone(text)} error={error? error.phone:''} />}
+            <CustomButton style={styles.button} onPress={submitForm}>{isLogin? 'Login' :'Register'}</CustomButton>
             <CustomButton style={{...styles.button, backgroundColor:Colors.danger}} onPress={()=> setIsLogin(!isLogin)}>{isLogin ? 'Switch To Register':'Swith To Login'}</CustomButton>
             </LinearGradient>
             </KeyboardAvoidingView>
@@ -44,15 +154,14 @@ const AuthScreen = props =>{
 const styles = StyleSheet.create({
     screen:{
         justifyContent:'center',
-        alignItems:'center',
-        margin:'15%'
+        margin:'10%'
     },
     button:{
         marginHorizontal:10
     },
     tabView:{
         padding:10,
-        width: 350,
+        width: '100%',
         borderRadius:6
     },
     title:{
@@ -60,6 +169,11 @@ const styles = StyleSheet.create({
         fontSize:FontSizes.xxl,
         color:'white',
         marginHorizontal:15
+    },
+    loading:{
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center'
     }
 })
 

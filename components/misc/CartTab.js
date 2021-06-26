@@ -19,10 +19,11 @@ const CartTab = props =>{
     }
 
     const onPayButtonClick = (orderItem)=>{
-        dispatch(orderActions.placeOrder(orderItem))
+        dispatch(orderActions.placeOrder(orderItem, props.postId))
     }
 
     const renderDataItem = itemData =>{
+        // console.log(itemData.item)
         return(
             <View style={{...styles.header, alignItems:'center', padding:5}}>
             <View style={!props.disablePayment?{...styles.splitView, flexBasis:'12.5%'}:{...styles.splitView, flexBasis:'20%', justifyContent:'space-around'}}>

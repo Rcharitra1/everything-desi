@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack'
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import AllStoresScreen, {screenOptions as allStoreScreenOptions} from '../screens/customer/AllStoresScreen';
@@ -20,10 +21,8 @@ import * as roles from '../constants/Roles';
 
 
 
-const User = {
-    role:roles.ROLE_ADMIN,
-    id:'Admin'
-};
+
+
 const defaultNavOptions = {
     headerStyle:{
         backgroundColor:Platform.OS==='android'? Colors.primary:''
@@ -89,15 +88,16 @@ const StoreAdminNavigator=()=>{
 
 const MainDrawerNavigator = createDrawerNavigator();
 export const MainNavigator = ()=>{
+    const user = useSelector(state=> state.user);
     return(
     <MainDrawerNavigator.Navigator drawerContentOptions={{activeTintColor:Colors.primary}}>
     <MainDrawerNavigator.Screen name='Store' component={StoreNavigator}/>
     <MainDrawerNavigator.Screen name='Orders' component={OrderNavigator}/>
     {
-        User.role===roles.ROLE_ADMIN && <MainDrawerNavigator.Screen name='AdminStores' component={AdminNavigator}/>
+        user.role===roles.ROLE_ADMIN && <MainDrawerNavigator.Screen name='AdminStores' component={AdminNavigator}/>
     }
     {
-        User.role===roles.ROLE_STORE_ADMIN && <MainDrawerNavigator.Screen name='StoreAdmin' component={StoreAdminNavigator}/>
+        user.role===roles.ROLE_STORE_ADMIN && <MainDrawerNavigator.Screen name='StoreAdmin' component={StoreAdminNavigator}/>
     }
     </MainDrawerNavigator.Navigator>);
 }

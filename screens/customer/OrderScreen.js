@@ -9,8 +9,10 @@ import HeaderButton from '../../components/ui/HeaderButton';
 import * as orderActions from '../../store/actions/order'
 import Colors from '../../constants/Colors';
 const OrderScreen = props =>{
+    const postId = useSelector(state=> state.user.postId);
     const orders = useSelector(state=> state.orders.orders);
 
+    // console.log(userId)
 
     // console.log(orderActions.getAllUserOrders())
 
@@ -20,8 +22,13 @@ const OrderScreen = props =>{
 
     useEffect(() => {
         setIsLoading(true)
-        dispatch(orderActions.getAllUserOrders('customer1'));
-        setIsLoading(false)
+        dispatch(orderActions.getAllUserOrders(postId)).then(()=> {
+            setIsLoading(false)
+        }).catch((err)=>{
+            console.log(err);
+            setIsLoading(false);
+        });
+        // setIsLoading(false)
     }, [])
 
     if(isLoading)

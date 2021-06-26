@@ -78,7 +78,7 @@ export default (state=initialState, action)=>{
                         [new Item(action.item.id, action.item.title, action.item.price, 1, action.item.discount)], action.item.price,
                         (action.item.price - (action.item.price * action.item.discount)+(0.05 * action.item.price)), (action.item.price * 0.05),
                         (action.item.discount * action.item.price),
-                        'customer1'
+                        action.item.customerId
                     )).sort((a, b)=> a.id > b.id ? 1 : -1)
                 }
             }
