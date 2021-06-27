@@ -138,7 +138,7 @@ const AuthScreen = props =>{
             <Text style={styles.title}>{isLogin? 'Login':'Register'}</Text>
             {!isLogin && <InputTab label={'Name'} value={name} onChange={(text)=> setName(text)} error={error ? error.name : ''}/>}
             <InputTab label={'Email'} onChange={(text)=> setEmail(text)} value={email} error={error ? error.email : ''}/>
-            <InputTab label={'Password'} value={password} onChange={(text)=> setPassword(text)} type={'password'}  error={error? error.password : ''} />
+            <InputTab label={'Password'} value={password} onChange={(text)=> setPassword(text)} secureTextEntry={true}  error={error? error.password : ''} />
             {!isLogin && <InputTab label={'Address'} value={address} onChange={text=> setAddress(text)} error={error ? error.address : ''} />}
             {!isLogin && <InputTab label={'Phone'} value={phone} onChange={text=> setPhone(text)} error={error? error.phone:''} />}
             <CustomButton style={styles.button} onPress={submitForm}>{isLogin? 'Login' :'Register'}</CustomButton>

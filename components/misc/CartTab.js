@@ -12,6 +12,8 @@ const CartTab = props =>{
     // console.log(props.storeId)
 
     const store = useSelector(state => state.stores.stores.find(item=> item.id===props.storeId))
+    const token = useSelector(state=> state.user.token);
+    // console.log(token);
     const dispatch = useDispatch();
 
     const removeFromCart=(id, orderId)=>{
@@ -19,7 +21,7 @@ const CartTab = props =>{
     }
 
     const onPayButtonClick = (orderItem)=>{
-        dispatch(orderActions.placeOrder(orderItem, props.postId))
+        dispatch(orderActions.placeOrder(orderItem, props.postId, token))
     }
 
     const renderDataItem = itemData =>{

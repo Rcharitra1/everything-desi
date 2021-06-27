@@ -6,9 +6,11 @@ import HeaderButton from '../../components/ui/HeaderButton';
 import * as productActions from '../../store/actions/products';
 import ProductTab from '../../components/misc/ProductTab';
 import FontSizes from '../../constants/FontSizes';
+import { ROLE_STORE_ADMIN } from '../../constants/Roles';
 
 const StoreProductHomeScreen = props =>{
     let storeId = useSelector(state=> state.user.storeId);
+    const user = useSelector(state=> state.user);
 
     
 
@@ -24,14 +26,14 @@ const StoreProductHomeScreen = props =>{
     //     storeId=useSelector(state=> state.user.storeId)
     // }
 
-    console.log(storeId)
+    // console.log(storeId)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(productActions.getStoreProducts(storeId))
     }, [])
 
     const deleteProduct = (storeId, productId, productTitle)=>{
-        Alert.alert(`Delete ${productTitle}`, 'Do you want to delete this product?', [{text:'Confirm', onPress:()=>dispatch(productActions.deleteProduct(storeId, productId)).then(()=>{
+        Alert.alert(`Delete ${productTitle}`, 'Do you want to delete this product?', [{text:'Confirm', onPress:()=>dispatch(productActions.deleteProduct(storeId, productId, user.token)).then(()=>{
             Alert.alert('Successfully Deleted','Product was successfully deleted', [{text:'Okay'}])
         })
         }, {text:'Cancel'}])
@@ -44,9 +46,26 @@ const StoreProductHomeScreen = props =>{
             headerRight:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item iconName={Platform.OS==='android'? 'md-add': 'ios-add'} onPress={()=>{
                     props.navigation.navigate('AddEditProduct', {headerTitle:'Add Product', storeId:storeId})
-                }}/></HeaderButtons>)
+                }}/></HeaderButtons>),
+            // headerLeft:()=>{
+
+            // }
         })
-    }, [])
+
+        if(user.role===ROLE_STORE_ADMIN)
+        {
+            props.navigation.setOptions({
+                headerLeft:()=>(
+                    <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item iconName={Platform.OS==='android'? 'md-menu':'ios-menu'} onPress={()=>{
+                        props.navigation.toggleDrawer()
+                    }}/>
+                    </HeaderButtons>
+                )
+            })
+        }
+
+    }, [user])
 
     const storeProducts = useSelector(state=> state.products.storeProducts);
 

@@ -9,7 +9,8 @@ import { ProductCategories } from '../../constants/Categories';
 import FontSizes from '../../constants/FontSizes';
 
 const ProductAddEditScreen = props =>{
-    const storeId = props.route.params.storeId
+    const storeId = props.route.params.storeId;
+    const token= useSelector(state=> state.user.token);
     // console.log(storeId)
 
     const productId = props.route.params.productId
@@ -93,13 +94,13 @@ const ProductAddEditScreen = props =>{
         if(product)
         {
             
-            dispatch(productActions.editProduct(storeId, productId, category, description, discount, imageUrl, price, quantity, title)).then(()=>{
+            dispatch(productActions.editProduct(storeId, productId, category, description, discount, imageUrl, price, quantity, title, token)).then(()=>{
                 Alert.alert('Product Updated', `${title} Successfully updated`, [{text:'Okay'}])
                 
             })
         }else
         {
-            dispatch(productActions.createProduct(storeId, title, category, imageUrl, description, quantity, price, discount)).then(()=>{
+            dispatch(productActions.createProduct(storeId, title, category, imageUrl, description, quantity, price, discount, token)).then(()=>{
                 Alert.alert('Product Added', `${title} Successfully Added`, [{text:'Okay'}])
             })
         }

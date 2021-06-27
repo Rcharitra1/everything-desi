@@ -13,6 +13,8 @@ import apiKey from '../../project_api/apiKey';
 
 
 
+
+
 export const getStores = ()=>{
     return async dispatch=>{
         const response = await fetch('https://everything-desi-default-rtdb.firebaseio.com/stores.json');
@@ -98,14 +100,14 @@ export const getCategoryStores =()=>{
 
 }
 
-export const createStore=(title,imageUrl, type, address, phone, email, isFeatured )=>{
+export const createStore=(title,imageUrl, type, address, phone, email, isFeatured, token )=>{
 
     
 
     return async dispatch=>{
     
 
-    const response = await fetch('https://everything-desi-default-rtdb.firebaseio.com/stores.json', {
+    const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores.json?auth=${token}`, {
         method:'POST',
         headers:{
             'Content-Type':'application/json'
@@ -148,7 +150,7 @@ export const createStore=(title,imageUrl, type, address, phone, email, isFeature
     const userResData = await userResponse.json();
     // console.log(userResData); 
 
-    const createUserAccount = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users.json`, {
+    const createUserAccount = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users.json?auth=${token}`, {
         method:'POST',
         headers:{
             'Content-Type':'application/json'
@@ -164,7 +166,7 @@ export const createStore=(title,imageUrl, type, address, phone, email, isFeature
         })
     })
 
-    const createUserResponse = await createUserAccount.json();
+    // const createUserResponse = await createUserAccount.json();
     // console.log(createUserResponse)
 
         dispatch({type:CREATE_STORE, store:{
@@ -182,11 +184,11 @@ export const createStore=(title,imageUrl, type, address, phone, email, isFeature
 
 
 
-export const editStore=(storeId, title,imageUrl, type, address, phone, email, isFeatured )=>{
+export const editStore=(storeId, title,imageUrl, type, address, phone, email, isFeatured, token )=>{
 
 
     return async dispatch=>{
-        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}.json`, {
+        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}.json?auth=${token}`, {
             method:'PATCH',
             headers:{
                 'Content-Type':'application/json'
@@ -225,9 +227,9 @@ export const editStore=(storeId, title,imageUrl, type, address, phone, email, is
 
 }
 
-export const deleteStore = (storeId)=>{
+export const deleteStore = (storeId, token)=>{
     return async dispatch=>{
-        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}.json`, {
+        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}.json?auth=${token}`, {
             method:'DELETE'
         })
 

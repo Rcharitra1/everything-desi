@@ -6,9 +6,12 @@ import FontSizes from '../../constants/FontSizes';
 import CustomButton from '../../components/ui/CustomButton';
 import Colors from '../../constants/Colors';
 import * as orderActions from '../../store/actions/order';
+// import {CardField, useStripe} from '@stripe/stripe-react-native'
 const CartScreen = props =>{
     const cartItems = useSelector(state=> state.cart.cartItems);
     const postId = useSelector(state=> state.user.postId);
+
+    const token = useSelector(state=> state.user.token);
 
 
     // console.log(cartItems)
@@ -20,24 +23,30 @@ const CartScreen = props =>{
     {
         return (<View style={styles.noscreen}><Text style={styles.noItems}>No Items In Cart</Text></View>)
     }
-
-    const onPayButtonClick = ()=>{
-        // for(let i=0; i<cartItems.length;i++)
-        // {
-        //     dispatch(orderActions.placeOrder(cartItems[i]))
-        // }
-        dispatch(orderActions.placeAllOrders(cartItems, postId))
-    }
-
-
     let totalDue = 0.00;
     if(cartItems)
-    {
-        for(let i=0; i<cartItems.length; i++)
         {
-            totalDue += cartItems[i].subTotal
+            for(let i=0; i<cartItems.length; i++)
+            {
+                totalDue += cartItems[i].subTotal
+            }
         }
+
+    const onPayButtonClick = ()=>{
+        for(let i=0; i<cartItems.length;i++)
+        {
+            dispatch(orderActions.placeOrder(cartItems[i]))
+        }
+        dispatch(orderActions.placeAllOrders(cartItems, postId, token))
+      
+        
+        // props.navigation.navigate('PaymentScreen', {
+        //     subTotal:totalDue
+        // })
     }
+
+
+    
 
     const renderItemData = itemData =>{
         return(

@@ -12,6 +12,7 @@ const StoreHomeScreen = props =>{
 
     const stores = useSelector(state=> state.stores.stores);
     const dispatch = useDispatch();
+    const token = useSelector(state=> state.user.token);
 
     const renderItemData = (itemData)=>{
         return<StoreTab imageUrl={itemData.item.imageUrl}
@@ -25,7 +26,7 @@ const StoreHomeScreen = props =>{
         }} onPress={()=>{
             props.navigation.navigate('CreateEditStore', {storeId:itemData.item.id, headerTitle:'Edit Store'})
         }} thirdOnPress={()=>{
-            Alert.alert('Confrim Delete', `You sure want to delete ${itemData.item.title}, all products and orders would be deleted`, [{text:'Confirm', onPress:()=> dispatch(storeActions.deleteStore(itemData.item.id)).then(()=>{
+            Alert.alert('Confrim Delete', `You sure want to delete ${itemData.item.title}, all products and orders would be deleted`, [{text:'Confirm', onPress:()=> dispatch(storeActions.deleteStore(itemData.item.id, token)).then(()=>{
                 Alert.alert('Delete Successfull', 'Store was deleted successfully', [{text:'Okay'}])
             })}, {text:'Cancel'}])
         }}/>

@@ -127,9 +127,9 @@ export const getProductCategories = ()=>{
 }
 
 
-export const createProduct=(storeId, title, category, imageUrl, description, quantity, price, discount)=>{
+export const createProduct=(storeId, title, category, imageUrl, description, quantity, price, discount, token)=>{
     return async dispatch=>{
-        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}/products.json`,{
+        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}/products.json?auth=${token}`,{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -171,9 +171,9 @@ export const createProduct=(storeId, title, category, imageUrl, description, qua
         })
     }
 }
-export const deleteProduct=(storeId, productId)=>{
+export const deleteProduct=(storeId, productId, token)=>{
     return async dispatch=>{
-        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}/products/${productId}.json`,{
+        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}/products/${productId}.json?auth=${token}`,{
             method:'DELETE',
         })
         const resData = await response.json();
@@ -184,9 +184,9 @@ export const deleteProduct=(storeId, productId)=>{
     }
 }
 
-export const editProduct= (storeId, productId, category, description, discount, imageUrl, price, quantity, title)=>{
+export const editProduct= (storeId, productId, category, description, discount, imageUrl, price, quantity, title, token)=>{
     return async dispatch=>{
-        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}/products/${productId}.json`, {
+        const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/stores/${storeId}/products/${productId}.json?auth=${token}`, {
             method:'PATCH',
             headers:{
                 'Content-Type':'application/json'

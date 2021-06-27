@@ -1,17 +1,18 @@
-
-import {LOGIN_USER, CREATE_USER} from '../actions/auth'
+import { AsyncStorage } from 'react-native'
+import {LOGIN_USER, CREATE_USER, LOGOUT_USER, AUTO_LOGIN} from '../actions/auth'
 const initialState = {
     userId:null,
     name:null,
     token:null,
     role:null,
     storeId:null,
-    postId:null
+    postId:null,
+    isAuthenticated:false
 }
 
 
 export default (state=initialState, action)=>{
-    // console.log('im here')
+    
     switch(action.type)
     {
         
@@ -21,7 +22,7 @@ export default (state=initialState, action)=>{
                 token:action.token
             }
         case LOGIN_USER:
-            // console.log('I go here')
+            
             return{
                 ...state,
                 userId:action.user.id,
@@ -29,8 +30,29 @@ export default (state=initialState, action)=>{
                 token:action.user.token,
                 role:action.user.role,
                 storeId:action.user.storeId,
-                postId: action.user.postId
+                postId: action.user.postId,
+                isAuthenticated:true
             }
+
+        case LOGOUT_USER:
+            return initialState
+        case AUTO_LOGIN:
+
+            if(action.role)
+            {
+                return{
+                    ...state,
+                    userId:action.userId,
+                    name:action.name,
+                    token:action.token,
+                    role:action.role,
+                    storeId:action.storeId? action.storeId:null,
+                    postId:action.postId,
+                    isAuthenticated:true
+                }
+            }
+            return initialState
+
 
 
     }

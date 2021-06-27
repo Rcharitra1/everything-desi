@@ -18,6 +18,8 @@ const EditCreateStoreScreen = props =>{
 
     const storeId = props.route.params.storeId;
 
+    const token = useSelector(state=> state.user.token);
+
     const store = useSelector(state => state.stores.stores.find(item=> item.id===storeId));
     // console.log(store)
     const [title, setTitle] = useState(store? store.title:'')
@@ -94,13 +96,13 @@ const EditCreateStoreScreen = props =>{
         email.toLowerCase();
         if(store)
         {
-            dispatch(storeActions.editStore(storeId, title, image, type, address, phone, email, isFeatured)).then(()=>{
+            dispatch(storeActions.editStore(storeId, title, image, type, address, phone, email, isFeatured, token)).then(()=>{
                 Alert.alert('Store Updated', `${title} had been updated`, [{text:'Okay'}])
             })
             // console.log('successfull')
         }else
         {
-            dispatch(storeActions.createStore(title, image, type, address, phone, email, isFeatured)).then(()=>{
+            dispatch(storeActions.createStore(title, image, type, address, phone, email, isFeatured, token)).then(()=>{
                 Alert.alert('Store Created', `${title} had been created`, [{text:'Okay'}])
             })
             // console.log('Unsuccessfull')

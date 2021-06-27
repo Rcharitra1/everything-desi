@@ -5,13 +5,14 @@ import Item from '../../models/Item';
 import Order from '../../models/order';
 
 
-export const placeOrder= ( orderItem, postId )=>{
+export const placeOrder= ( orderItem, postId, token )=>{
 
         return async dispatch=>{
 
+            // console.log(token)
 
             delete orderItem.id;
-            const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${postId}/orders.json`, {
+            const response = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${postId}/orders.json?auth=${token}`, {
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'
@@ -39,8 +40,8 @@ export const placeOrder= ( orderItem, postId )=>{
     
 }
 
-const postOrders = async (orderItem, postId)=>{
-    return await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${postId}/orders.json`, {
+const postOrders = async (orderItem, postId, token)=>{
+    return await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users/${postId}/orders.json?auth=${token}`, {
         method:'POST',
         headers:{
             'Content-Type':'application/type'

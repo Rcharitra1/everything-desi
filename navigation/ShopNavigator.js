@@ -1,11 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+
+import { useSelector, useDispatch } from 'react-redux';
+
 import {createStackNavigator} from '@react-navigation/stack'
-import {createDrawerNavigator} from '@react-navigation/drawer'
+import {createDrawerNavigator, DrawerItemList} from '@react-navigation/drawer'
 import AllStoresScreen, {screenOptions as allStoreScreenOptions} from '../screens/customer/AllStoresScreen';
 import StoreProductsScreen, {screenOptions as storeProductsScreenOptions} from '../screens/customer/StoreProductsScreen';
 import DetailScreen, {screenOptions as detailScreenOptions} from '../screens/customer/DetailScreen';
-import { Platform } from 'react-native'
+import { Platform, View, SafeAreaView } from 'react-native'
 import Colors from '../constants/Colors';
 import FontSizes from '../constants/FontSizes';
 import OrderScreen, {screenOptions as orderScreenOptions} from '../screens/customer/OrderScreen'
@@ -17,8 +19,10 @@ import ProductAddEditScreen, {screenOptions as productAddEditScreenOptions} from
 import EditCreateStoreScreen, {screenOptions as editCreateStoreScreenOptions} from '../screens/admin/EditCreateStoreScreen';
 import AuthScreen, {screenOptions as authScreenOptions} from '../screens/auth/AuthScreen';
 
+import PaymentScreen, {screenOptions as paymentScreenOptions} from '../screens/auth/PaymentScreen';
 import * as roles from '../constants/Roles';
-
+import CustomButton from '../components/ui/CustomButton';
+import * as authActions from '../store/actions/auth';
 
 
 
@@ -44,6 +48,7 @@ export const StoreNavigator = ()=>{
         <StoreStackNavigator.Screen name='Details'
         component={DetailScreen} options={detailScreenOptions}/>
         <StoreStackNavigator.Screen name='Cart' component={CartScreen}/>
+        <StoreStackNavigator.Screen name='PaymentScreen' component={PaymentScreen} options={paymentScreenOptions}/>
         </StoreStackNavigator.Navigator>
         
     );
@@ -82,6 +87,7 @@ const StoreAdminNavigator=()=>{
     return(
         <StoreAdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
         <StoreAdminStackNavigator.Screen name='StoreHome' component={StoreProductHomeScreen}/>
+        <StoreAdminStackNavigator.Screen name='AddEditProduct' options={productAddEditScreenOptions} component={ProductAddEditScreen}/>
         </StoreAdminStackNavigator.Navigator>
     );
 }
@@ -89,10 +95,29 @@ const StoreAdminNavigator=()=>{
 const MainDrawerNavigator = createDrawerNavigator();
 export const MainNavigator = ()=>{
     const user = useSelector(state=> state.user);
+    const dispatch = useDispatch();
     return(
-    <MainDrawerNavigator.Navigator drawerContentOptions={{activeTintColor:Colors.primary}}>
+    <MainDrawerNavigator.Navigator drawerContentOptions={{activeTintColor:Colors.primary}} 
+    drawerContent={props =>{
+        return (<View style={{flex:1}}>
+        <SafeAreaView forceInset={{top:'always', horizontal:'never'}}>
+        <DrawerItemList {...props}/>
+        <View style={{marginHorizontal:15}}>
+        <CustomButton style={{width:100}} onPress={()=>{
+            dispatch(authActions.logoutUser())
+        }}>Logout</CustomButton>
+        </View> 
+        </SafeAreaView>
+        </View>)
+    }}
+    >
     <MainDrawerNavigator.Screen name='Store' component={StoreNavigator}/>
-    <MainDrawerNavigator.Screen name='Orders' component={OrderNavigator}/>
+    {
+        (user.role===roles.ROLE_ADMIN || user.role===roles.ROLE_CUSTOMER)
+        &&
+        <MainDrawerNavigator.Screen name='Orders' component={OrderNavigator}/>
+    }
+   
     {
         user.role===roles.ROLE_ADMIN && <MainDrawerNavigator.Screen name='AdminStores' component={AdminNavigator}/>
     }

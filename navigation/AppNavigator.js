@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {  MainNavigator, AuthNavigator  } from './ShopNavigator';
+import * as authActions from '../store/actions/auth';
 
 
 
@@ -11,17 +12,24 @@ import {  MainNavigator, AuthNavigator  } from './ShopNavigator';
 const AppNavigator = props =>{
 
     const [userLoggedIn, setUserLoggedIn]=useState(false);
-    const user = useSelector(state=> state.user.userId);
-    // const dispatch = useDispatch();
-    // console.log(user);
+    const isAuthenticated= useSelector(state=> state.user.isAuthenticated);
+    const dispatch = useDispatch();
+
+
+
 
     useEffect(() => {
-        console.log(user)
-        if(user!=null)
+
+        dispatch(authActions.autoLogin())
+        
+        if(isAuthenticated)
         {
             setUserLoggedIn(true)
+        }else
+        {
+            setUserLoggedIn(false)
         }
-    }, [user, userLoggedIn])
+    }, [isAuthenticated, userLoggedIn])
 
     // console.log(userLoggedIn)
 
