@@ -1,11 +1,12 @@
-import React, {useEffect} from 'react';
-import { View, Text, StyleSheet, FlatList, Platform, Alert } from 'react-native'
+import React, {useEffect, useState, useCallback} from 'react';
+import { View, Text, StyleSheet, FlatList, Platform, Alert, ActivityIndicator } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'; 
 import HeaderButton from '../../components/ui/HeaderButton';
 import * as productActions from '../../store/actions/products';
 import ProductTab from '../../components/misc/ProductTab';
 import FontSizes from '../../constants/FontSizes';
+import Colors from '../../constants/Colors';
 import { ROLE_STORE_ADMIN } from '../../constants/Roles';
 
 const StoreProductHomeScreen = props =>{
@@ -27,10 +28,38 @@ const StoreProductHomeScreen = props =>{
     // }
 
     // console.log(storeId)
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch();
+
+    const loadData = useCallback(async ()=>{
+        setLoading(true)
+        try{
+            dispatch(productActions.getStoreProducts(storeId))
+        }catch(e)
+        {
+            console.log(e)
+        }
+        setLoading(false)
+    
+    }, [ setLoading])
     useEffect(() => {
-        dispatch(productActions.getStoreProducts(storeId))
-    }, [])
+        loadData()
+    }, [dispatch, loadData])
+
+    useEffect(() => {
+        const willFocus = props.navigation.addListener('focus', ()=>{
+            loadData();
+        })
+        return () => {
+            willFocus();
+        }
+    }, [loadData])
+
+
+    if(loading)
+    {
+        return <ActivityIndicator size='large' color={Colors.primary} />
+    }
 
     const deleteProduct = (storeId, productId, productTitle)=>{
         Alert.alert(`Delete ${productTitle}`, 'Do you want to delete this product?', [{text:'Confirm', onPress:()=>dispatch(productActions.deleteProduct(storeId, productId, user.token)).then(()=>{
@@ -45,7 +74,7 @@ const StoreProductHomeScreen = props =>{
             headerTitle:store.title,
             headerRight:()=>(<HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item iconName={Platform.OS==='android'? 'md-add': 'ios-add'} onPress={()=>{
-                    props.navigation.navigate('AddEditProduct', {headerTitle:'Add Product', storeId:storeId})
+                    props.navigation.navigate('AddEditProduct', { storeId:storeId})
                 }}/></HeaderButtons>),
             // headerLeft:()=>{
 
@@ -78,7 +107,7 @@ const StoreProductHomeScreen = props =>{
         return <ProductTab imageUrl={itemData.item.imageUrl} title={itemData.item.title} price={itemData.item.price} discounted={itemData.item.discount>0? true : false} discount={itemData.item.discount} buttonTitle={'Edit'} secondButtonTitle={'Delete'} onPress={()=>{
             props.navigation.navigate('AddEditProduct', {
                 productId : itemData.item.id,
-                headerTitle:'Edit Product',
+                // headerTitle:'Edit Product',
                 storeId:storeId
             })
         }} secondOnPress={deleteProduct.bind(this,storeId, itemData.item.id, itemData.item.title )}/>

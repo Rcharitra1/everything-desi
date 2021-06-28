@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux'
 import { View, Text, ScrollView, StyleSheet, FlatList, Platform, ActivityIndicator } from 'react-native'
 import {HeaderButtons, Item} from 'react-navigation-header-buttons'
@@ -14,15 +14,35 @@ const AllStoreScreen = props =>{
 
     const dispatch = useDispatch();
 
-
     const [isLoading, setIsLoading]=useState(false);
-    useEffect(()=>{
+    const loadData = useCallback(async()=>{
         setIsLoading(true);
-        dispatch(storeActions.getStores());
-        dispatch(storeActions.getFeaturedStore())
-        dispatch(storeActions.getCategoryStores())
+        try{
+            await dispatch(storeActions.getStores());
+            await dispatch(storeActions.getFeaturedStore())
+            await dispatch(storeActions.getCategoryStores())
+        }catch(e)
+        {
+            console.log(e)
+        }
+       
         setIsLoading(false)
-    },[])
+
+    },[setIsLoading])
+
+    useEffect(()=>{
+
+        loadData();
+    },[dispatch, loadData])
+
+    useEffect(() => {
+        const willFocus = props.navigation.addListener('focus', ()=>{
+            loadData();
+        })
+        return () => {
+            willFocus();
+        }
+    }, [loadData])
 
     const allStores = useSelector(state=> state.stores.stores);
     const featuredStores = useSelector(state=> state.stores.featuredStores)

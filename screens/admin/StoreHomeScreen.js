@@ -1,18 +1,50 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, Platform, Dimensions, Alert } from 'react-native'
+import React, {useState, useCallback, useEffect} from 'react';
+import { View, Text, StyleSheet, FlatList, Platform, Dimensions, Alert, ActivityIndicator } from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'; 
 import HeaderButton from '../../components/ui/HeaderButton';
 import StoreTab from '../../components/misc/StoreTab';
 import * as storeActions from '../../store/actions/stores';
+import Colors from '../../constants/Colors';
 
 const StoreHomeScreen = props =>{
 
-    //Need to use dimenstions to better adjist screen
+
+    const [loading, setLoading] = useState(false)
 
     const stores = useSelector(state=> state.stores.stores);
     const dispatch = useDispatch();
     const token = useSelector(state=> state.user.token);
+
+    const loadData = useCallback(async ()=>{
+
+        setLoading(true)
+        try{
+            await dispatch(storeActions.getStores())
+        }catch(e)
+        {
+            console.log(e)
+        }
+        setLoading(false)
+    }, [setLoading])
+
+    useEffect(() => {
+        loadData();
+    }, [dispatch, loadData])
+
+    useEffect(() => {
+        const willFocus = props.navigation.addListener('focus', ()=>{
+            loadData();
+        })
+        return () => {
+            willFocus();
+        }
+    }, [loadData])
+
+    if(loading)
+    {
+        return <ActivityIndicator size='large' color={Colors.primary} />
+    }
 
     const renderItemData = (itemData)=>{
         return<StoreTab imageUrl={itemData.item.imageUrl}

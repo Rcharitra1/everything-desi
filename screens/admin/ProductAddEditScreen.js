@@ -13,10 +13,32 @@ const ProductAddEditScreen = props =>{
     const token= useSelector(state=> state.user.token);
     // console.log(storeId)
 
+
+    // console.log(storeId);
+
     const productId = props.route.params.productId
 
     // console.log(productId)
-    const product = useSelector(state => state.products.storeProducts.find(item=> item.id===productId))
+    let product = useSelector(state => state.products.storeProducts.find(item=> item.id===productId))
+    if(productId===undefined)
+    {
+        product = false
+    }
+
+    // console.log(product)
+
+
+
+
+    useEffect(() => {
+        props.navigation.setOptions({
+            headerTitle: product? 'Edit Product':'Add Product'
+        })
+    }, [product])
+
+    // console.log(!!undefined)
+ 
+  
 
     // console.log(product)
     const dispatch = useDispatch();
@@ -84,13 +106,13 @@ const ProductAddEditScreen = props =>{
         setError(errorCapture)
         if(Object.keys(errorCapture).length===0)
         {
-            console.log('success')
+            // console.log('success')
             submitHandler()
         }
     }
 
     const submitHandler = ()=>{
-
+ 
         if(product)
         {
             
@@ -104,8 +126,9 @@ const ProductAddEditScreen = props =>{
                 Alert.alert('Product Added', `${title} Successfully Added`, [{text:'Okay'}])
             })
         }
+        props.navigation.navigate('ListStoreProduct', {storeId:storeId})
 
-        props.navigation.goBack()
+    
 
         
         
@@ -168,11 +191,11 @@ const styles = StyleSheet.create({
 })
 
 export const screenOptions = navData =>{
-    const headerTitle = navData.route.params.headerTitle;
+    // const headerTitle = navData.route.params.headerTitle;
 
 
     return{
-        headerTitle:headerTitle,
+        headerTitle:'Page',
        
     }
 }

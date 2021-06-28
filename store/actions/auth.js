@@ -80,9 +80,9 @@ export const createUser = (email, password, address, phone, name, role=ROLE_CUST
         })
 
         const createUserResponse = await createUser.json();
-        console.log(createUserResponse);
+        // console.log(createUserResponse);
 
-        const userData = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users.json`,{
+        const userData = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users.json?auth=${createUserResponse.idToken}`,{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -121,11 +121,6 @@ export const loginUser=(email, password)=>{
 
 
 
-
-
-
-        // console.log(email)
-
         if(!response.ok)
         {
             const errorData = await response.json();
@@ -138,13 +133,8 @@ export const loginUser=(email, password)=>{
 
 
         const resData = await response.json();
-        dispatch(setLogoutTimer(parseInt(10)*1000))
-        // console.log(resData);
-        
+   dispatch(setLogoutTimer(parseInt(resData.expiresIn)*1000))     
 
-        // autoLogout(parseInt('5000'))
-
-        // autoLogout(parseInt('10000'));
         const fetchUser = await fetch(`https://everything-desi-default-rtdb.firebaseio.com/users.json`, {
             method:'GET'
         })
@@ -159,7 +149,6 @@ export const loginUser=(email, password)=>{
 
         const fetchUserData = await fetchUser.json();
 
-        // console.log(fetchUserData)
         let userObj
 
         for(const key in fetchUserData)
@@ -171,16 +160,6 @@ export const loginUser=(email, password)=>{
             }
         }
 
-
-        // console.log(userObj)
-
-        // console.log(resData.expiresIn);
-
-        // autoLogout(resData.expiresIn);
-        
-        
-
-        // console.log('i m here')
 
         saveCredentials(resData.idToken, resData.localId, userObj.key, userObj.name, userObj.role, (userObj.storeId? userObj.storeId:null))
   
