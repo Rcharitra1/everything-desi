@@ -9,7 +9,7 @@ import FontSizes from '../../constants/FontSizes';
 import {emailPattern, phonePattern} from '../../validations/masterValidator'
 import * as authActions from '../../store/actions/auth'
 import { ROLE_CUSTOMER, ROLE_ADMIN } from '../../constants/Roles';
-
+//djiasdjiaewdeajwidj
 
 const AuthScreen = props =>{
 
