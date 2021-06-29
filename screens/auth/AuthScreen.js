@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator, Alert  } from 'react-native'
 import {useDispatch} from 'react-redux'
 import InputTab from '../../components/misc/InputTab';
@@ -35,20 +35,42 @@ const AuthScreen = props =>{
     }, [setIsLogin, isLogin])
 
 
-    const submitClick= ()=>{
+    const submitClick= useCallback(async()=>{
         setIsLoading(true);
+
+        setError({})
+        let errorContainer={}
         
         // let action = ''
         if(isLogin)
         {
-            // action = authActions.loginUser(email.toLowerCase(), password)
 
-            dispatch(authActions.loginUser(email.toLowerCase(), password)).then(()=>{
+
+            dispatch(authActions.loginUser(email.toLowerCase(), password)).then((res)=>{
                 setIsLoading(false)
 
             }).catch((err)=> {
-                setIsLoading(false)
-                console.log(err)})
+         
+                // console.log('IM here')
+                let errString = err.toString().toLowerCase()
+
+                if(errString.includes('password'))
+                {
+                    errString = errString.split(':')[1].replaceAll('_', ' ')
+
+                    errorContainer.password=errString;
+                }
+
+                if(errString.includes('email'))
+                {
+                    errString = errString.split(':')[1].replaceAll('_', ' ')
+                    errorContainer.email=errString;
+                }
+
+                setIsLoading(false);
+                
+            }
+                )
         }else
         {
             dispatch(authActions.createUser(email.toLowerCase(), password, address, phone, name, ROLE_CUSTOMER)).then(()=>{
@@ -58,11 +80,28 @@ const AuthScreen = props =>{
                 Alert.alert('Account Created',`Welcome ${name}, pls sign in with email and password`,[{text:'Okay'}] )
             }).catch((err)=> {
                 setIsLoading(false)
-                console.log(err)})
+                let errorStroing= err.toString().toLowerCase();
+                if(errorStroing.includes('email'))
+                {
+                    errorStroing= errorStroing.split(':')[1].replaceAll('_', ' ');
+
+                    errorContainer.email = errorStroing;
+                }
+
+                setIsLoading(false)
+            })
         }
+
+        if(Object.keys(errorContainer)>0)
+        {
+            setError(errorContainer)
+        }
+
+
+
         
 
-    }
+    }, [error])
 
 
     const submitForm = ()=>

@@ -124,8 +124,10 @@ export const loginUser=(email, password)=>{
         if(!response.ok)
         {
             const errorData = await response.json();
-            console.log(errorData)
-            throw new Error('Server error')
+            // console.log(errorData.error.message)
+
+            throw new Error(errorData.error.message)
+            // throw new Error(errorData)
             
         };
 

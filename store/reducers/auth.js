@@ -7,7 +7,8 @@ const initialState = {
     role:null,
     storeId:null,
     postId:null,
-    isAuthenticated:false
+    isAuthenticated:false,
+    tryAutoLogin:false
 }
 
 
@@ -31,7 +32,8 @@ export default (state=initialState, action)=>{
                 role:action.user.role,
                 storeId:action.user.storeId,
                 postId: action.user.postId,
-                isAuthenticated:true
+                isAuthenticated:true,
+                tryAutoLogin:false
             }
 
         case LOGOUT_USER:
@@ -48,10 +50,15 @@ export default (state=initialState, action)=>{
                     role:action.role,
                     storeId:action.storeId? action.storeId:null,
                     postId:action.postId,
-                    isAuthenticated:true
+                    isAuthenticated:true,
+                    tryAutoLogin:true
                 }
             }
-            return initialState
+            return {
+                ...state,
+                tryAutoLogin:true
+
+            }
 
 
 

@@ -1,9 +1,10 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {  MainNavigator, AuthNavigator  } from './ShopNavigator';
 import * as authActions from '../store/actions/auth';
+import StartupScreen from '../screens/StartupScreen';
 
 
 
@@ -11,34 +12,39 @@ import * as authActions from '../store/actions/auth';
 
 const AppNavigator = props =>{
 
-    const [userLoggedIn, setUserLoggedIn]=useState(false);
-    const isAuthenticated= useSelector(state=> state.user.isAuthenticated);
+    // const [userLoggedIn, setUserLoggedIn]=useState(true);
+    const isAuthenticated= useSelector(state=> !!state.user.token);
+    const isTryAutoLogin= useSelector(state => state.user.tryAutoLogin)
     const dispatch = useDispatch();
+
+ 
 
 
 
 
     useEffect(() => {
 
+        // setLoading(true)
         dispatch(authActions.autoLogin())
         
-        if(isAuthenticated)
-        {
-            setUserLoggedIn(true)
-        }else
-        {
-            setUserLoggedIn(false)
-        }
-    }, [isAuthenticated, userLoggedIn])
+        // if(isAuthenticated)
+        // {
+        //     setUserLoggedIn(true)
+        // }else
+        // {
+        //     setUserLoggedIn(false)
+        // }
+    }, [isAuthenticated])
 
-    // console.log(userLoggedIn)
 
     return(
         <NavigationContainer>
-        {
-            userLoggedIn ?<MainNavigator/>:
-            <AuthNavigator/>
-        }
+        
+                {!isTryAutoLogin && !isAuthenticated && <StartupScreen/>}
+                {isAuthenticated && <MainNavigator/>}
+                {!isAuthenticated && isTryAutoLogin && <AuthNavigator/>}
+            
+ 
         </NavigationContainer>
     );
 }
