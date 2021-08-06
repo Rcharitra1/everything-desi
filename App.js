@@ -10,6 +10,9 @@ import AppLoading from 'expo-app-loading';
 import cartReducer from './store/reducers/cart'
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning...'])
+LogBox.ignoreAllLogs();
 
 
 import * as Font from 'expo-font'

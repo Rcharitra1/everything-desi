@@ -45,6 +45,8 @@ const AuthScreen = props =>{
         if(isLogin)
         {
 
+            console.log('email'+email)
+
 
             dispatch(authActions.loginUser(email.toLowerCase(), password)).then((res)=>{
                 setIsLoading(false)
@@ -52,20 +54,27 @@ const AuthScreen = props =>{
             }).catch((err)=> {
          
                 // console.log('IM here')
+                console.log(err)
                 let errString = err.toString().toLowerCase()
 
-                if(errString.includes('password'))
+                if(Platform.OS!=='android')
                 {
-                    errString = errString.split(':')[1].replaceAll('_', ' ')
-
-                    errorContainer.password=errString;
+                    if(errString.includes('password'))
+                    {
+                        errString = errString.split(':')[1].replaceAll('_', ' ')
+    
+                        errorContainer.password=errString;
+                    }
+    
+    
+                    if(errString.includes('email'))
+                    {
+                        errString = errString.split(':')[1].replaceAll('_', ' ')
+                        errorContainer.email=errString;
+                    }
                 }
 
-                if(errString.includes('email'))
-                {
-                    errString = errString.split(':')[1].replaceAll('_', ' ')
-                    errorContainer.email=errString;
-                }
+                
 
                 setIsLoading(false);
                 
