@@ -39,14 +39,18 @@ const AppNavigator = props =>{
 
     return(
         <NavigationContainer>
-        
-                {!isTryAutoLogin && !isAuthenticated && <StartupScreen/>}
-                {isAuthenticated && <MainNavigator/>}
-                {!isAuthenticated && isTryAutoLogin && <AuthNavigator/>}
-            
+        {!isTryAutoLogin && !isAuthenticated && <StartupScreen/>}
+{isAuthenticated && <MainNavigator/>}
+{!isAuthenticated && isTryAutoLogin && <AuthNavigator/>}
  
         </NavigationContainer>
     );
 }
 
 export default AppNavigator;
+
+
+
+// {!isTryAutoLogin && !isAuthenticated && <StartupScreen/>}
+// {isAuthenticated && <MainNavigator/>}
+// {!isAuthenticated && isTryAutoLogin && <AuthNavigator/>}

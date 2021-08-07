@@ -12,3 +12,12 @@
 
 
 <img src='./app_scan.png' height='200px' width='200px'>
+
+
+### Application Sreenshots
+
+<img src='./assets/screenshots/startup.png' height='400px' width='200px'>
+<img src='./assets/screenshots/store.png' height='400px' width='200px'>
+<img src='./assets/screenshots/orders.png' height='400px' width='200px'>
+<img src='./assets/screenshots/login.png' height='400px' width='200px'>
+<img src='./assets/screenshots/addstore.png' height='400px' width='200px'>
